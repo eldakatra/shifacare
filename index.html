@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShifaCare — Better Healthcare, Less Waiting</title>
+  <meta name="description" content="ShifaCare is an educational ICT project showing how appointment booking, crowd indicators and medicine installment plans could improve healthcare access in Egypt.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231677E8'/%3E%3Cpath d='M26 12h12v14h14v12H38v14H26V38H12V26h14z' fill='white'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+/* ==========================================================
+   ShifaCare — styles.css
+   White & blue healthcare theme, built for projector readability
+   ========================================================== */
+
+:root {
+  --primary: #1677E8;
+  --primary-hover: #0F63C7;
+  --dark: #124A8A;
+  --light: #EAF4FF;
+  --white: #FFFFFF;
+  --text: #172B4D;
+  --muted: #3F557A;
+  --border: #CFE2F8;
+
+  --green: #16A36A;
+  --green-dark: #0B7A50;
+  --green-bg: #E3F6EE;
+  --orange: #F59E0B;
+  --orange-dark: #8A5300;
+  --orange-bg: #FFF2D6;
+  --red: #DC3545;
+  --red-dark: #B02A37;
+  --red-bg: #FDE8EA;
+
+  --radius: 24px;
+  --radius-sm: 16px;
+  --shadow: 0 10px 30px rgba(18, 74, 138, .12);
+  --shadow-lg: 0 18px 44px rgba(18, 74, 138, .2);
+  --header-h: 84px;
+  --font: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 16px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--white);
+  overflow-x: hidden;
+}
+
+img, svg { max-width: 100%; }
+h1, h2, h3, h4 { line-height: 1.15; margin: 0 0 .5em; font-weight: 800; letter-spacing: -.01em; }
+p { margin: 0 0 1em; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+a { color: var(--primary); }
+button, input, select { font: inherit; color: inherit; }
+
+h1 { font-size: clamp(2.75rem, 6vw, 4rem); letter-spacing: -.02em; }
+h2 { font-size: clamp(2.25rem, 4.5vw, 3.5rem); }
+h3 { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+h4 { font-size: 1.5rem; }
+
+.container { width: min(1280px, calc(100% - 3rem)); margin-inline: auto; }
+
+.icon {
+  width: 1em; height: 1em; flex: none;
+  fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+:focus-visible { outline: 4px solid #FFB020; outline-offset: 3px; border-radius: 8px; }
+
+.skip-link {
+  position: absolute; left: 1rem; top: -100px; z-index: 200;
+  background: var(--dark); color: #fff; padding: .8rem 1.2rem; border-radius: 12px; font-weight: 700;
+}
+.skip-link:focus { top: 1rem; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
+  min-height: 56px; padding: .9rem 1.6rem;
+  font-size: 1.2rem; font-weight: 700; line-height: 1.2; text-decoration: none;
+  border: 2px solid transparent; border-radius: var(--radius-sm);
+  cursor: pointer; transition: transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
+}
+.btn .icon { font-size: 1.5rem; }
+.btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(22, 119, 232, .28); }
+.btn:active:not(:disabled) { transform: translateY(0); box-shadow: none; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+.btn-secondary { background: #fff; color: var(--dark); border-color: var(--primary); }
+.btn-secondary:hover:not(:disabled) { background: var(--light); box-shadow: 0 10px 22px rgba(18, 74, 138, .14); }
+.btn-ghost { background: transparent; color: var(--dark); border-color: var(--border); min-height: 48px; font-size: 1.05rem; }
+.btn-ghost:hover:not(:disabled) { background: var(--light); box-shadow: none; }
+.btn-lg { min-height: 66px; padding: 1rem 2rem; font-size: 1.3rem; }
+.btn-block { width: 100%; }
+
+/* ---------- Header ---------- */
+.site-header {
+  position: sticky; top: 0; z-index: 100; height: var(--header-h);
+  background: rgba(255, 255, 255, .96); backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--border);
+}
+.nav { height: 100%; display: flex; align-items: center; gap: 1.5rem; }
+.logo { display: inline-flex; align-items: center; gap: .7rem; text-decoration: none; color: var(--dark); }
+.logo-mark {
+  display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 14px;
+  background: var(--primary); color: #fff; font-size: 1.7rem; flex: none;
+}
+.logo-text { font-size: 1.9rem; font-weight: 900; letter-spacing: -.02em; }
+.logo-light { color: #fff; }
+.logo-light .logo-mark { background: #fff; color: var(--primary); }
+
+nav { margin-inline: auto; }
+.nav-links { display: flex; gap: .3rem; }
+.nav-links a:not(.btn) {
+  display: block; padding: .6rem 1rem; border-radius: 12px;
+  font-size: 1.15rem; font-weight: 700; color: var(--text); text-decoration: none;
+  transition: background .15s, color .15s;
+}
+.nav-links a:not(.btn):hover { background: var(--light); color: var(--primary); }
+.nav-links a.active { background: var(--light); color: var(--primary); }
+.mobile-only { display: none; }
+.nav-cta { white-space: nowrap; }
+
+.menu-toggle {
+  display: none; margin-left: auto; width: 56px; height: 56px; border-radius: 14px;
+  border: 2px solid var(--border); background: #fff; color: var(--dark); font-size: 2rem; cursor: pointer;
+  place-items: center;
+}
+.menu-toggle .icon-close { display: none; }
+.menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+.menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+/* ---------- Sections ---------- */
+.section { padding: 6rem 0; }
+.section-alt { background: var(--light); }
+.section-head { text-align: center; max-width: 880px; margin: 0 auto 3rem; }
+.section-head h2 { color: var(--dark); }
+.lead { font-size: 1.4rem; color: var(--muted); margin-bottom: .8rem; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--light); color: var(--dark); font-weight: 800; font-size: 1.05rem;
+  padding: .45rem 1.1rem; border-radius: 999px; margin-bottom: 1.1rem; border: 2px solid var(--border);
+}
+.section-alt .eyebrow { background: #fff; }
+.eyebrow .icon { font-size: 1.35rem; color: var(--primary); }
+.eyebrow-light { background: rgba(255,255,255,.14); color: #fff; border-color: rgba(255,255,255,.35); }
+.eyebrow-light .icon { color: #fff; }
+
+.demo-note {
+  display: inline-flex; align-items: flex-start; gap: .6rem; text-align: left;
+  background: #fff; border: 2px dashed #9CC6F7; color: var(--dark);
+  padding: .7rem 1.1rem; border-radius: 14px; font-size: 1.05rem; line-height: 1.45; margin: .4rem 0 0;
+  max-width: 100%; min-width: 0;
+}
+.demo-note > span, .demo-note strong { min-width: 0; overflow-wrap: anywhere; }
+.demo-note .icon { font-size: 1.5rem; margin-top: .1rem; color: var(--primary); }
+.demo-note.center { align-items: center; margin-bottom: 1.5rem; }
+
+/* ---------- Cards / grids ---------- */
+.card {
+  background: #fff; border: 2px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow); transition: transform .25s ease, box-shadow .25s ease;
+}
+.grid { display: grid; gap: 1.75rem; }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.icon-badge {
+  display: inline-grid; place-items: center; width: 76px; height: 76px; border-radius: 22px;
+  background: var(--light); color: var(--primary); font-size: 2.8rem; flex: none;
+}
+.icon-badge.green { background: var(--green-bg); color: var(--green-dark); }
+.icon-badge.red { background: var(--red-bg); color: var(--red-dark); }
+
+/* ---------- Hero ---------- */
+.hero {
+  padding: 4rem 0 5rem;
+  background: linear-gradient(180deg, #fff 0%, var(--light) 100%);
+}
+.hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 3rem; align-items: center; }
+.hero h1 { color: var(--dark); margin-bottom: .45em; }
+.hero .hl { color: var(--primary); }
+.hero-sub { font-size: 1.5rem; color: var(--muted); max-width: 36ch; margin-bottom: 1.8rem; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.6rem; }
+.hero-points { display: flex; flex-wrap: wrap; gap: .6rem 1.5rem; font-weight: 600; color: var(--muted); font-size: 1.1rem; }
+.hero-points li { display: flex; align-items: center; gap: .45rem; }
+.hero-points .icon { color: var(--green); font-size: 1.5rem; }
+.hero-art svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 18px 30px rgba(18, 74, 138, .18)); }
+
+.service-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; margin-top: 4rem; }
+.service-card { display: block; padding: 2rem; text-decoration: none; color: var(--text); }
+.service-card h3 { color: var(--dark); margin: 1.1rem 0 .4rem; }
+.service-card p { color: var(--muted); margin-bottom: 1rem; }
+.service-card .icon-badge { width: 88px; height: 88px; font-size: 3.4rem; }
+.card-link { display: inline-flex; align-items: center; gap: .5rem; font-weight: 800; color: var(--primary); font-size: 1.15rem; }
+.service-card:hover, .hospital-card:hover, .crowd-card:hover, .step-card:hover, .why-card:hover, .med-card:hover {
+  transform: translateY(-6px); box-shadow: var(--shadow-lg);
+}
+
+/* ---------- Filters ---------- */
+.filters {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 1.25rem; padding: 1.75rem; margin-bottom: 1.5rem;
+}
+.field label, .calc label, legend { display: block; font-weight: 800; margin-bottom: .5rem; font-size: 1.1rem; color: var(--dark); }
+input[type="text"], input[type="search"], input[type="tel"], input[type="email"], select {
+  width: 100%; height: 64px; padding: 0 1.1rem; font-size: 1.2rem;
+  border: 2px solid #9CC6F7; border-radius: var(--radius-sm); background: #fff; color: var(--text);
+  transition: border-color .15s, box-shadow .15s;
+}
+select {
+  appearance: none; padding-right: 3rem; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23124A8A' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.4rem;
+}
+input:hover, select:hover { border-color: var(--primary); }
+input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(22, 119, 232, .25); }
+.input-icon { position: relative; }
+.input-icon .icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 1.6rem; color: var(--primary); pointer-events: none; }
+.input-icon input { padding-left: 3.4rem; }
+
+.results-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.results-count { font-weight: 800; font-size: 1.3rem; color: var(--dark); margin: 0; }
+
+/* ---------- Hospital cards ---------- */
+.hospital-card { padding: 1.75rem; display: flex; flex-direction: column; gap: 1rem; position: relative; }
+.hospital-top { display: flex; gap: 1rem; align-items: flex-start; }
+.hospital-top h3 { margin: 0 0 .25rem; font-size: 1.55rem; color: var(--dark); }
+.avatar { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 18px; background: var(--primary); color: #fff; font-size: 2.2rem; flex: none; }
+.loc, .hours { display: flex; align-items: center; gap: .45rem; margin: 0; color: var(--muted); font-size: 1.1rem; font-weight: 600; }
+.loc .icon, .hours .icon { color: var(--primary); font-size: 1.4rem; }
+.demo-tag { align-self: flex-start; background: var(--light); color: var(--dark); border: 1.5px dashed #7DB5F5; border-radius: 8px; padding: .15rem .65rem; font-weight: 700; font-size: .95rem; }
+.tags { display: flex; flex-wrap: wrap; gap: .5rem; }
+.tags li { background: var(--light); color: var(--dark); padding: .3rem .8rem; border-radius: 999px; font-weight: 700; font-size: 1rem; }
+.crowd-pill {
+  display: flex; align-items: center; gap: .55rem; padding: .7rem 1rem; border-radius: 14px; font-size: 1.1rem; font-weight: 600; margin-top: auto;
+}
+.crowd-pill .icon { font-size: 1.6rem; }
+.crowd-pill.low, .legend .low { background: var(--green-bg); color: var(--green-dark); }
+.crowd-pill.moderate, .legend .moderate { background: var(--orange-bg); color: var(--orange-dark); }
+.crowd-pill.high, .legend .high { background: var(--red-bg); color: var(--red-dark); }
+.hospital-card .btn { margin-top: .25rem; }
+
+.empty-state { text-align: center; padding: 3rem 2rem; }
+.empty-state[hidden] { display: none; }
+.empty-state .icon { font-size: 4rem; color: var(--primary); margin-bottom: .5rem; }
+
+/* ---------- Crowd section ---------- */
+.legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 2rem; }
+.legend li { display: flex; align-items: center; gap: .7rem; padding: .8rem 1.4rem; border-radius: 16px; font-size: 1.15rem; font-weight: 600; }
+.legend li strong { display: block; font-size: 1.25rem; }
+.legend .icon { font-size: 2.2rem; }
+
+.crowd-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .75rem; }
+.chip {
+  min-height: 56px; padding: .6rem 1.4rem; border-radius: 999px; font-weight: 800; font-size: 1.1rem;
+  background: #fff; color: var(--dark); border: 2px solid var(--border); cursor: pointer;
+  transition: background .15s, color .15s, transform .15s, border-color .15s;
+}
+.chip:hover { transform: translateY(-2px); border-color: var(--primary); }
+.chip[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
+.chip-low[aria-pressed="true"] { background: var(--green-dark); border-color: var(--green-dark); }
+.chip-moderate[aria-pressed="true"] { background: #B26B00; border-color: #B26B00; }
+.chip-high[aria-pressed="true"] { background: var(--red-dark); border-color: var(--red-dark); }
+
+.crowd-card { overflow: hidden; display: flex; flex-direction: column; border-top: 0; }
+.crowd-card.low { --c: var(--green); --cd: var(--green-dark); --cb: var(--green-bg); }
+.crowd-card.moderate { --c: var(--orange); --cd: var(--orange-dark); --cb: var(--orange-bg); }
+.crowd-card.high { --c: var(--red); --cd: var(--red-dark); --cb: var(--red-bg); }
+.crowd-status {
+  display: flex; align-items: center; gap: .7rem; padding: 1rem 1.5rem;
+  background: var(--cb); color: var(--cd); font-weight: 900; font-size: 1.5rem;
+  border-bottom: 6px solid var(--c);
+}
+.crowd-status .icon { font-size: 2.2rem; }
+.crowd-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; flex: 1; }
+.crowd-body h3 { margin: 0; font-size: 1.5rem; color: var(--dark); }
+.crowd-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.metric { background: var(--light); border-radius: 16px; padding: .8rem 1rem; text-align: center; }
+.metric-num { display: block; font-size: 2.8rem; font-weight: 900; line-height: 1.1; color: var(--cd); }
+.metric-label { font-size: 1rem; font-weight: 700; color: var(--muted); }
+.meter { height: 18px; border-radius: 999px; background: #E3ECF8; overflow: hidden; }
+.meter-fill { height: 100%; width: 0; border-radius: 999px; background: var(--c); transition: width 1s cubic-bezier(.2,.8,.2,1); }
+.persons-row { display: flex; align-items: center; gap: .8rem; font-weight: 700; color: var(--cd); font-size: 1.1rem; }
+.persons { display: inline-flex; gap: .2rem; }
+.persons span { font-size: 2.2rem; color: #BFD3EC; display: inline-flex; }
+.persons span.on { color: var(--c); }
+.persons span.on .icon { fill: currentColor; }
+.updated { display: flex; align-items: center; gap: .45rem; margin: 0; font-size: 1rem; color: var(--muted); font-weight: 600; }
+.updated .icon { font-size: 1.2rem; }
+.crowd-card .btn { margin-top: auto; }
+.pop-in { animation: popIn .45s ease both; }
+
+/* ---------- Booking wizard ---------- */
+.wizard { padding: 2.5rem; max-width: 1100px; margin: 0 auto; }
+.wizard:hover { transform: none; }
+.stepper { display: grid; grid-template-columns: repeat(6, 1fr); gap: .5rem; margin-bottom: 2.5rem; position: relative; }
+.stepper li { display: flex; flex-direction: column; align-items: center; gap: .5rem; text-align: center; position: relative; font-weight: 700; color: var(--muted); font-size: 1.05rem; }
+.stepper li::before {
+  content: ""; position: absolute; top: 25px; right: 50%; width: 100%; height: 5px; background: var(--border); z-index: 0;
+}
+.stepper li:first-child::before { display: none; }
+.stepper .dot {
+  position: relative; z-index: 1; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%;
+  background: #fff; border: 4px solid var(--border); font-weight: 900; font-size: 1.25rem; color: var(--muted);
+  transition: background .25s, border-color .25s, color .25s;
+}
+.stepper li.done .dot { background: var(--green); border-color: var(--green); color: #fff; }
+.stepper li.current .dot { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 0 0 6px rgba(22, 119, 232, .2); }
+.stepper li.current { color: var(--dark); }
+.stepper li.done::before, .stepper li.current::before { background: var(--green); }
+
+.panel { animation: slideIn .35s ease both; }
+.panel[hidden] { display: none; }
+.panel h3 { display: flex; align-items: center; gap: .7rem; color: var(--dark); margin-bottom: 1.5rem; outline: none; }
+.panel h3 .icon { font-size: 2.2rem; color: var(--primary); }
+.panel-hint { font-weight: 600; color: var(--muted); }
+
+.choice-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.choice-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.choice {
+  position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: .35rem; text-align: left;
+  min-height: 110px; padding: 1.1rem 1.2rem; border-radius: 18px; background: #fff; cursor: pointer;
+  border: 3px solid var(--border); color: var(--text);
+  transition: transform .18s, border-color .18s, background .18s, box-shadow .18s;
+}
+.choice:hover:not(:disabled) { transform: translateY(-3px); border-color: var(--primary); box-shadow: var(--shadow); }
+.choice .c-title { font-weight: 800; font-size: 1.25rem; color: var(--dark); line-height: 1.2; }
+.choice .c-sub { font-size: 1rem; font-weight: 600; color: var(--muted); display: flex; align-items: center; gap: .35rem; }
+.choice .c-icon { font-size: 2.2rem; color: var(--primary); }
+.choice[aria-pressed="true"] { border-color: var(--primary); background: var(--light); box-shadow: 0 0 0 4px rgba(22, 119, 232, .2); }
+.choice[aria-pressed="true"]::after {
+  content: ""; position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; background: var(--primary)
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.500l4 4 8-9'/%3E%3C/svg%3E") center/20px no-repeat;
+}
+.choice:disabled { opacity: .5; cursor: not-allowed; background: #F2F6FB; }
+.mini-badge { display: inline-flex; align-items: center; gap: .3rem; padding: .1rem .6rem; border-radius: 8px; font-weight: 800; font-size: .95rem; }
+.mini-badge.low { background: var(--green-bg); color: var(--green-dark); }
+.mini-badge.moderate { background: var(--orange-bg); color: var(--orange-dark); }
+.mini-badge.high { background: var(--red-bg); color: var(--red-dark); }
+
+/* Calendar */
+.calendar { max-width: 640px; margin: 0 auto; }
+.cal-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.cal-title { font-size: 1.6rem; font-weight: 900; color: var(--dark); }
+.cal-nav { width: 56px; height: 56px; display: grid; place-items: center; font-size: 1.8rem; border-radius: 14px; border: 2px solid var(--border); background: #fff; cursor: pointer; color: var(--dark); transition: background .15s; }
+.cal-nav:hover:not(:disabled) { background: var(--light); border-color: var(--primary); }
+.cal-nav:disabled { opacity: .35; cursor: not-allowed; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: .4rem; }
+.cal-dow { text-align: center; font-weight: 800; color: var(--muted); font-size: 1.05rem; padding: .4rem 0; }
+.cal-day {
+  aspect-ratio: 1 / 1; min-height: 52px; border-radius: 14px; border: 2px solid transparent; background: var(--light);
+  font-size: 1.25rem; font-weight: 800; color: var(--dark); cursor: pointer; transition: background .15s, transform .15s, border-color .15s;
+}
+.cal-day:hover:not(:disabled) { background: #D4E8FF; transform: scale(1.06); }
+.cal-day:disabled { background: transparent; color: #A9B8CF; cursor: not-allowed; font-weight: 600; text-decoration: line-through; }
+.cal-day.today { border-color: var(--primary); }
+.cal-day[aria-pressed="true"] { background: var(--primary); color: #fff; }
+.cal-blank { visibility: hidden; }
+.cal-chosen { text-align: center; font-weight: 800; font-size: 1.3rem; color: var(--dark); margin-top: 1.2rem; }
+
+/* Time slots */
+.slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+.slot {
+  min-height: 84px; border-radius: 18px; border: 3px solid var(--border); background: #fff; cursor: pointer;
+  font-size: 1.4rem; font-weight: 900; color: var(--dark); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .1rem;
+  transition: transform .18s, background .18s, border-color .18s;
+}
+.slot small { font-size: .95rem; font-weight: 700; color: var(--green-dark); }
+.slot:hover:not(:disabled) { transform: translateY(-3px); border-color: var(--primary); background: var(--light); }
+.slot[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: #fff; }
+.slot[aria-pressed="true"] small { color: #fff; }
+.slot:disabled { background: #EEF2F7; border-style: dashed; color: #6B7C96; cursor: not-allowed; }
+.slot:disabled .t { text-decoration: line-through; }
+.slot:disabled small { color: var(--red-dark); }
+.slot-legend { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 1.25rem; font-weight: 600; color: var(--muted); font-size: 1.05rem; }
+.slot-legend li { display: flex; align-items: center; gap: .5rem; }
+.swatch { width: 22px; height: 22px; border-radius: 6px; border: 3px solid var(--border); background: #fff; }
+.swatch.sel { background: var(--primary); border-color: var(--primary); }
+.swatch.busy { background: #EEF2F7; border-style: dashed; }
+
+/* Form */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.field-wide { grid-column: 1 / -1; }
+.optional { font-weight: 600; color: var(--muted); }
+.field-error { min-height: 0; margin: .4rem 0 0; color: var(--red-dark); font-weight: 700; font-size: 1.05rem; display: none; }
+.field.invalid .field-error { display: flex; align-items: center; gap: .4rem; }
+.field.invalid input { border-color: var(--red); background: #FFF8F8; }
+.privacy-note { display: flex; gap: .6rem; align-items: center; margin-top: 1.5rem; color: var(--muted); font-size: 1.05rem; font-weight: 600; }
+.privacy-note .icon { font-size: 1.6rem; color: var(--primary); }
+
+/* Summary (dl) */
+.summary { display: grid; gap: .75rem; margin: 0; }
+.summary > div { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem 1.25rem; background: var(--light); border-radius: 16px; align-items: center; }
+.summary dt { font-weight: 700; color: var(--muted); display: flex; align-items: center; gap: .6rem; font-size: 1.1rem; }
+.summary dt .icon { color: var(--primary); font-size: 1.6rem; }
+.summary dd { margin: 0; font-weight: 800; color: var(--dark); text-align: right; font-size: 1.25rem; }
+
+.step-error { display: none; margin: 1.5rem 0 0; padding: 1rem 1.25rem; border-radius: 14px; background: var(--red-bg); border: 2px solid var(--red); color: var(--red-dark); font-weight: 800; font-size: 1.15rem; }
+.step-error.show { display: block; animation: shake .3s ease; }
+.wizard-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2rem; }
+.wizard-nav #btn-next { margin-left: auto; }
+
+/* Success */
+.success { max-width: 760px; margin: 0 auto; padding: 3rem 2rem; text-align: center; }
+.success[hidden] { display: none; }
+.success:hover { transform: none; }
+.success h3 { font-size: clamp(2rem, 4vw, 2.8rem); color: var(--green-dark); outline: none; }
+.success-check { width: 130px; margin: 0 auto 1rem; }
+.success-check svg { width: 100%; }
+.success-check .ring { fill: var(--green-bg); stroke: var(--green); stroke-width: 6; stroke-dasharray: 340; stroke-dashoffset: 340; animation: draw .7s ease forwards; }
+.success-check .tick { fill: none; stroke: var(--green-dark); stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 100; stroke-dashoffset: 100; animation: draw .5s .5s ease forwards; }
+.ticket { text-align: left; border: 3px dashed #9CC6F7; border-radius: 20px; padding: 1.75rem; margin: 0 0 2rem; background: #fff; }
+.ticket-head { display: flex; align-items: center; gap: .7rem; font-weight: 900; font-size: 1.3rem; color: var(--dark); margin-bottom: 1rem; }
+.ticket-head .logo-mark { width: 40px; height: 40px; font-size: 1.4rem; }
+.ref-label { margin: 0; font-weight: 700; color: var(--muted); }
+.ref { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 900; letter-spacing: .08em; color: var(--primary); margin: 0 0 1rem; }
+.ticket-foot { margin: 1.25rem 0 0; color: var(--muted); font-size: 1rem; font-weight: 600; }
+.success-actions { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+
+/* ---------- Medicine ---------- */
+.med-card { padding: 1.75rem; display: flex; flex-direction: column; gap: .8rem; }
+.med-top { display: flex; align-items: center; gap: 1rem; }
+.med-top h3 { margin: 0; font-size: 1.45rem; color: var(--dark); }
+.med-pack { margin: 0; color: var(--muted); font-weight: 600; font-size: 1.1rem; }
+.med-price { font-size: 2.4rem; font-weight: 900; color: var(--primary); margin: 0; line-height: 1.1; }
+.med-price small { font-size: 1.1rem; font-weight: 700; color: var(--muted); }
+.plan-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.plan-chips li { background: var(--green-bg); color: var(--green-dark); font-weight: 800; padding: .3rem .8rem; border-radius: 999px; font-size: 1rem; }
+.rx-tag { display: inline-flex; align-items: center; gap: .4rem; background: var(--orange-bg); color: var(--orange-dark); font-weight: 800; padding: .25rem .8rem; border-radius: 10px; font-size: 1rem; align-self: flex-start; }
+.med-card .btn { margin-top: auto; }
+
+.calc { margin-top: 3rem; padding: 2.5rem; }
+.calc:hover { transform: none; }
+.calc-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+.calc-head h3 { margin: 0; display: flex; align-items: center; gap: .7rem; color: var(--dark); }
+.calc-head h3 .icon { font-size: 2.4rem; color: var(--primary); }
+.no-fee { margin: 0; display: flex; align-items: center; gap: .5rem; background: var(--green-bg); color: var(--green-dark); padding: .6rem 1.1rem; border-radius: 14px; font-weight: 800; font-size: 1.15rem; }
+.no-fee .icon { font-size: 1.6rem; }
+.no-fee span { font-weight: 600; }
+.calc-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 2.5rem; }
+.price-box { margin: 1.5rem 0; padding: 1.25rem 1.5rem; background: var(--light); border-radius: 20px; display: flex; flex-direction: column; gap: .15rem; }
+.price-label { font-weight: 800; color: var(--dark); font-size: 1.1rem; }
+.price-value { font-size: 3.4rem; font-weight: 900; color: var(--primary); line-height: 1.1; }
+.price-pack { font-weight: 600; color: var(--muted); }
+.rx-note { display: inline-flex; align-items: center; gap: .4rem; margin-top: .5rem; color: var(--orange-dark); font-weight: 800; }
+.rx-note[hidden] { display: none; }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+legend { padding: 0; }
+#plan-options { display: grid; gap: .9rem; }
+.plan-card {
+  display: grid; grid-template-columns: auto 1fr; align-items: center; gap: .2rem 1rem;
+  padding: 1rem 1.25rem; border: 3px solid var(--border); border-radius: 18px; cursor: pointer; background: #fff;
+  transition: border-color .18s, background .18s, transform .18s;
+}
+.plan-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+.calc .plan-card { display: grid; margin: 0; }
+.plan-letter { grid-row: span 2; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: var(--light); color: var(--primary); font-weight: 900; font-size: 1.5rem; }
+.plan-name { font-weight: 900; font-size: 1.35rem; color: var(--dark); }
+.plan-each { font-weight: 600; color: var(--muted); font-size: 1.1rem; }
+input:checked + .plan-card { border-color: var(--primary); background: var(--light); box-shadow: 0 0 0 4px rgba(22, 119, 232, .2); }
+input:checked + .plan-card .plan-letter { background: var(--primary); color: #fff; }
+input:focus-visible + .plan-card { outline: 4px solid #FFB020; outline-offset: 3px; }
+input:disabled + .plan-card { opacity: .5; cursor: not-allowed; background: #F2F6FB; transform: none; }
+.calc-right h4 { color: var(--dark); }
+.schedule { display: grid; gap: .7rem; margin-bottom: 1rem; counter-reset: pay; }
+.schedule li { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .9rem 1.2rem; background: var(--light); border-radius: 16px; font-weight: 700; font-size: 1.15rem; animation: slideIn .3s ease both; }
+.schedule .when { display: block; font-weight: 600; color: var(--muted); font-size: 1rem; }
+.schedule .amt { font-weight: 900; font-size: 1.4rem; color: var(--dark); white-space: nowrap; }
+.schedule-total { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1rem; padding: 1rem 1.2rem; border-radius: 16px; border: 3px solid var(--green); background: var(--green-bg); color: var(--green-dark); font-weight: 900; font-size: 1.3rem; margin-bottom: 1.5rem; }
+.schedule-total small { flex-basis: 100%; font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: .4rem; }
+.plan-confirm { margin-top: 2rem; padding: 1.75rem; border-radius: 20px; border: 3px solid var(--green); background: #fff; animation: slideIn .35s ease both; outline: none; }
+.plan-confirm[hidden] { display: none; }
+.confirm-top { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.25rem; }
+.confirm-top h4 { margin: 0; color: var(--green-dark); }
+.confirm-top p { margin: 0; color: var(--muted); font-weight: 600; }
+.plan-confirm .btn { margin-top: 1.25rem; }
+.info-box { margin-top: 2rem; padding: 2rem; }
+.info-box:hover { transform: none; }
+.info-box h3 { display: flex; align-items: center; gap: .7rem; color: var(--dark); }
+.info-box h3 .icon { color: var(--primary); font-size: 2.2rem; }
+.check-list { display: grid; gap: .7rem; }
+.check-list li { display: flex; gap: .7rem; align-items: flex-start; font-weight: 600; }
+.check-list .icon { font-size: 1.7rem; color: var(--green); margin-top: .1rem; stroke-width: 3; }
+
+/* ---------- How it works ---------- */
+.flow-title { display: flex; align-items: center; gap: .7rem; color: var(--dark); margin: 0 0 2.75rem; }
+.flow-title .icon { font-size: 2.4rem; color: var(--primary); }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; margin-bottom: 4rem; position: relative; }
+.step-card { padding: 2.25rem 1.75rem 1.75rem; position: relative; }
+.step-card:not(:last-child)::after {
+  content: ""; position: absolute; top: 50%; left: 100%; width: 2.5rem; height: 0; border-top: 5px dotted var(--primary); transform: translateY(-50%);
+}
+.step-num { position: absolute; top: -26px; left: 1.5rem; background: var(--dark); color: #fff; font-weight: 900; font-size: 1.6rem; padding: .25rem 1rem; border-radius: 14px; letter-spacing: .04em; }
+.step-card .icon-badge { margin-bottom: 1rem; }
+.step-card h4 { color: var(--dark); }
+.step-card p { margin: 0; color: var(--muted); }
+
+/* ---------- Why ---------- */
+.why-card { padding: 1.75rem; display: grid; gap: 1rem; }
+.why-card .problem, .why-card .solution { position: relative; display: grid; grid-template-columns: auto 1fr; gap: .5rem 1rem; align-items: center; padding: 1.25rem; border-radius: 18px; }
+.why-card .problem { background: var(--red-bg); }
+.why-card .solution { background: var(--green-bg); }
+.why-card h3 { margin: 0; font-size: 1.6rem; color: var(--red-dark); }
+.why-card p { margin: 0; font-weight: 600; color: #0B4F35; }
+.why-card .icon-badge { width: 64px; height: 64px; font-size: 2.2rem; background: #fff; }
+.tag { grid-column: 1 / -1; justify-self: start; font-weight: 900; font-size: 1rem; letter-spacing: .06em; text-transform: uppercase; padding: .15rem .7rem; border-radius: 8px; color: #fff; }
+.tag-red { background: var(--red-dark); }
+.tag-green { background: var(--green-dark); }
+.why-card .arrow { text-align: center; color: var(--primary); font-size: 2rem; transform: rotate(90deg); height: 2rem; display: grid; place-items: center; }
+
+/* ---------- Stats ---------- */
+.stats { background: linear-gradient(135deg, var(--dark), #0E3563); color: #fff; }
+.stats .section-head h2, .stats .lead { color: #fff; }
+.stats .lead { opacity: .9; }
+.stat-card { text-align: center; padding: 2.5rem 1.75rem; border-radius: var(--radius); background: rgba(255,255,255,.1); border: 2px solid rgba(255,255,255,.3); transition: transform .25s, background .25s; }
+.stat-card:hover { transform: translateY(-6px); background: rgba(255,255,255,.16); }
+.stat-card > .icon { font-size: 4.5rem; margin-bottom: .5rem; }
+.stat-card h3 { font-size: 2.2rem; margin-bottom: .3rem; }
+.stat-card p { margin-bottom: 1.2rem; font-size: 1.25rem; opacity: .95; }
+.stat-demo { display: inline-block; background: rgba(255,255,255,.18); border-radius: 12px; padding: .5rem 1rem; font-size: 1.05rem; font-weight: 600; }
+.stat-demo strong { font-size: 1.4rem; font-weight: 900; }
+.stats-note { text-align: center; margin: 2rem 0 0; font-weight: 600; opacity: .9; font-size: 1.05rem; }
+
+/* ---------- Footer ---------- */
+.site-footer { background: #0A2B52; color: #E6F0FC; padding: 4rem 0 2rem; }
+.footer-grid { display: grid; grid-template-columns: 1.2fr 1fr 1.4fr; gap: 3rem; margin-bottom: 2.5rem; }
+.footer-tag { margin-top: 1rem; font-size: 1.25rem; font-weight: 600; }
+.site-footer h4 { color: #fff; font-size: 1.3rem; margin-bottom: 1rem; }
+.site-footer li { margin-bottom: .55rem; }
+.site-footer a { color: #E6F0FC; text-decoration: none; font-weight: 600; }
+.site-footer a:hover { color: #fff; text-decoration: underline; }
+.contact li { display: flex; gap: .6rem; align-items: center; }
+.contact .icon { font-size: 1.5rem; color: #7DB5F5; }
+.disclaimer { border-top: 1px solid rgba(255,255,255,.25); padding-top: 1.75rem; font-size: 1.05rem; line-height: 1.6; max-width: 90ch; }
+.copyright { font-size: 1rem; opacity: .8; margin: 0; }
+
+/* ---------- Reveal on scroll ---------- */
+.js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .6s ease, transform .6s ease; }
+.js .reveal.in { opacity: 1; transform: none; }
+
+/* ---------- Keyframes ---------- */
+@keyframes slideIn { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+@keyframes popIn { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1200px) {
+  .nav-links a:not(.btn) { padding: .5rem .7rem; font-size: 1.05rem; }
+  .filters { grid-template-columns: 1fr 1fr; }
+  .field-search { grid-column: 1 / -1; }
+}
+
+@media (max-width: 1100px) {
+  .menu-toggle { display: grid; }
+  .nav-cta { display: none; }
+  nav { margin: 0; position: absolute; top: var(--header-h); left: 0; right: 0; }
+  .nav-links {
+    flex-direction: column; gap: .4rem; background: #fff; padding: 0 1.5rem; max-height: 0; overflow: hidden;
+    border-bottom: 0 solid var(--border); box-shadow: var(--shadow-lg); visibility: hidden;
+    transition: max-height .35s ease, padding .35s ease, visibility .35s;
+  }
+  .site-header.open .nav-links { max-height: 560px; padding: 1rem 1.5rem 1.5rem; visibility: visible; border-bottom-width: 2px; }
+  .nav-links a:not(.btn) { padding: 1rem 1.2rem; font-size: 1.3rem; }
+  .mobile-only { display: block; margin-top: .5rem; }
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-art { max-width: 560px; margin-inline: auto; }
+  .grid-3, .service-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .steps { grid-template-columns: 1fr; gap: 3rem; }
+  .step-card:not(:last-child)::after { top: 100%; left: 50%; width: 0; height: 3rem; border-top: 0; border-left: 5px dotted var(--primary); transform: translateX(-50%); }
+  .calc-grid { grid-template-columns: 1fr; }
+  .choice-grid, .choice-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .slots { grid-template-columns: repeat(3, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 760px) {
+  body { font-size: 1.125rem; }
+  .container { width: min(1280px, calc(100% - 2rem)); }
+  .section { padding: 4rem 0; }
+  .hero { padding: 2.5rem 0 3.5rem; }
+  .hero-sub { font-size: 1.3rem; }
+  .hero-actions .btn { width: 100%; }
+  .grid-3, .grid-2, .service-row, .filters, .form-grid, .footer-grid { grid-template-columns: 1fr; }
+  .wizard, .calc { padding: 1.25rem; }
+  .stepper { grid-template-columns: repeat(6, 1fr); gap: .15rem; }
+  .stepper .label { display: none; }
+  .stepper li.current .label { display: none; }
+  .stepper .dot { width: 42px; height: 42px; font-size: 1.1rem; }
+  .stepper li::before { top: 19px; }
+  .choice-grid, .choice-grid-4 { grid-template-columns: 1fr; }
+  .slots { grid-template-columns: repeat(2, 1fr); }
+  .why-card .problem, .why-card .solution { grid-template-columns: 1fr; }
+  .summary > div { flex-direction: column; align-items: flex-start; gap: .2rem; }
+  .summary dd { text-align: left; }
+  .wizard-nav { flex-direction: column-reverse; }
+  .wizard-nav .btn { width: 100%; }
+  .success-actions .btn { width: 100%; }
+  .price-value { font-size: 2.8rem; }
+  .results-bar .btn { width: 100%; }
+  .crowd-controls .btn { width: 100%; }
+  .logo-text { font-size: 1.6rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  .js .reveal { opacity: 1; transform: none; }
+}
+
+/* ---------- Print: only the appointment ticket ---------- */
+@media print {
+  body * { visibility: hidden; }
+  #ticket, #ticket * { visibility: visible; }
+  #ticket { position: absolute; left: 0; top: 0; width: 100%; border: 3px solid #1677E8; }
+}
+
+</style>
+  
+</head>
+<body>
+
+<!-- ICON SPRITE (inline SVG so icons always render, even offline) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-cross" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></symbol>
+    <symbol id="i-hospital" viewBox="0 0 24 24"><path d="M3 21V8l9-5 9 5v13"/><path d="M9 21v-5h6v5"/><path d="M12 7v4M10 9h4"/><path d="M2 21h20"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M7 3v4M17 3v4"/><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 11h16"/></symbol>
+    <symbol id="i-calendar-check" viewBox="0 0 24 24"><path d="M7 3v4M17 3v4"/><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 11h16M9 16l2 2 4-4"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 20v-1a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v1"/><circle cx="10" cy="8" r="3.5"/><path d="M20 20v-1a4 4 0 0 0-3-3.9M16 4.2a3.5 3.5 0 0 1 0 6.6"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="7.5" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></symbol>
+    <symbol id="i-pill" viewBox="0 0 24 24"><path d="M10.5 20.5a5 5 0 0 1-7-7l10-10a5 5 0 0 1 7 7z"/><path d="M8.5 8.5l7 7"/></symbol>
+    <symbol id="i-bottle" viewBox="0 0 24 24"><path d="M9 2h6v3H9z"/><path d="M8 5h8v3l1 2v10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V10l1-2z"/><path d="M7 14h10"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h13v4"/><path d="M3 7v12a2 2 0 0 0 2 2h15V9H5a2 2 0 0 1-2-2z"/><path d="M16 15h2"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="9" cy="9" r="6"/><path d="M15.5 9.3A6 6 0 1 1 9.3 15.5"/><path d="M9 6.5v5M7.5 8h3"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="M21 21l-4.6-4.6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M7.5 12.5l3 3 6-6.5"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+    <symbol id="i-stethoscope" viewBox="0 0 24 24"><path d="M6 3v6a4 4 0 0 0 8 0V3M4 3h3M13 3h3"/><path d="M10 13v2a5 5 0 0 0 10 0v-1"/><circle cx="20" cy="12" r="2"/></symbol>
+    <symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 19V6M3 15h18v4M21 15v-3a3 3 0 0 0-3-3h-7v6"/><circle cx="7" cy="11.5" r="1.8"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 9V3h10v6"/><path d="M7 17H4v-7h16v7h-3"/><rect x="7" y="14" width="10" height="7"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></symbol>
+    <symbol id="i-accessibility" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.8"/><path d="M5 8l7 1.2L19 8M12 9.2V14M9 21l3-7 3 7"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.5l8.8-8.8a5 5 0 0 0 0-7.1z"/></symbol>
+    <symbol id="i-heart-pulse" viewBox="0 0 24 24"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.5l8.8-8.8a5 5 0 0 0 0-7.1z"/><path d="M6 12h3l1.5-3 3 6 1.5-3h3"/></symbol>
+    <symbol id="i-droplet" viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-tooth" viewBox="0 0 24 24"><path d="M7 3c-2.2 0-4 1.8-4 5 0 4 2 5 2.5 8 .4 2.5 1 5 2.5 5s1.5-4 4-4 2.5 4 4 4 2.1-2.500 2.5-5c.5-3 2.500-4 2.500-8 0-3.200-1.800-5-4-5-2 0-2.500 1-5 1S9 3 7 3z"/></symbol>
+    <symbol id="i-ear" viewBox="0 0 24 24"><path d="M7 9a5 5 0 0 1 10 0c0 3-2 4-3 6s-1 5-4 5a3 3 0 0 1-3-3"/><path d="M10 9.500a2 2 0 0 1 4 0"/></symbol>
+    <symbol id="i-smile" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 14.500s1.500 2 4 2 4-2 4-2M9 9.500v.01M15 9.500v.01"/></symbol>
+    <symbol id="i-bone" viewBox="0 0 24 24"><path d="M8 16l8-8"/><circle cx="5.500" cy="16.500" r="2.200"/><circle cx="7.500" cy="18.500" r="2.200"/><circle cx="16.500" cy="5.500" r="2.200"/><circle cx="18.500" cy="7.500" r="2.200"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.300 6.300"/><path d="M20 4v7h-7"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></symbol>
+    <symbol id="i-trending" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-9"/><path d="M15 6h6v6"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h12M9 12h12M9 18h12M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ===================== HEADER / NAV ===================== -->
+<header class="site-header" id="site-header">
+  <div class="container nav">
+    <a href="#home" class="logo" aria-label="ShifaCare home">
+      <span class="logo-mark"><svg class="icon" aria-hidden="true"><use href="#i-cross"></use></svg></span>
+      <span class="logo-text">ShifaCare</span>
+    </a>
+
+    <nav aria-label="Main navigation">
+      <ul class="nav-links" id="site-menu">
+        <li><a href="#home" data-nav>Home</a></li>
+        <li><a href="#hospitals" data-nav>Find Hospitals</a></li>
+        <li><a href="#booking" data-nav>Book Appointment</a></li>
+        <li><a href="#medicine" data-nav>Medicine Support</a></li>
+        <li><a href="#how-it-works" data-nav>How It Works</a></li>
+        <li class="mobile-only"><a href="#booking" class="btn btn-primary btn-block"><svg class="icon" aria-hidden="true"><use href="#i-calendar-check"></use></svg> Book Now</a></li>
+      </ul>
+    </nav>
+
+    <a href="#booking" class="btn btn-primary nav-cta"><svg class="icon" aria-hidden="true"><use href="#i-calendar-check"></use></svg> Book Now</a>
+
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="site-menu" aria-label="Open menu">
+      <svg class="icon icon-open" aria-hidden="true"><use href="#i-menu"></use></svg>
+      <svg class="icon icon-close" aria-hidden="true"><use href="#i-x"></use></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="home">
+  <div class="container hero-grid">
+    <div class="hero-text">
+      <span class="eyebrow"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg> Educational ICT Project · Demo Data</span>
+      <h1>Healthcare Without the <span class="hl">Long Wait.</span></h1>
+      <p class="hero-sub">Find hospitals, check waiting times, book appointments, and get the medicines you need with flexible payments.</p>
+      <div class="hero-actions">
+        <a href="#booking" class="btn btn-primary btn-lg"><svg class="icon" aria-hidden="true"><use href="#i-calendar-check"></use></svg> Book an Appointment</a>
+        <a href="#hospitals" class="btn btn-secondary btn-lg" id="hero-find"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg> Find a Hospital</a>
+      </div>
+      <ul class="hero-points">
+        <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"></use></svg> No sign-up needed</li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"></use></svg> Large, easy-to-read design</li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-check-circle"></use></svg> Works on phone &amp; desktop</li>
+      </ul>
+    </div>
+
+    <div class="hero-art">
+      <svg viewBox="0 0 600 540" role="img" aria-label="Illustration of a hospital building with a doctor and a patient standing in front of it, and a booking confirmation card">
+        <circle cx="300" cy="270" r="250" fill="#DCEBFF"/>
+        <circle cx="300" cy="270" r="190" fill="#EAF4FF"/>
+        <!-- building -->
+        <rect x="120" y="130" width="360" height="320" rx="20" fill="#fff" stroke="#1677E8" stroke-width="5"/>
+        <rect x="120" y="130" width="360" height="62" rx="20" fill="#1677E8"/>
+        <rect x="120" y="170" width="360" height="22" fill="#1677E8"/>
+        <circle cx="300" cy="100" r="46" fill="#fff" stroke="#1677E8" stroke-width="5"/>
+        <path d="M290 76h20v18h18v20h-18v18h-20v-18h-18V94h18z" fill="#DC3545" transform="translate(0,-8) scale(1)" opacity="0"/>
+        <path d="M291 76h18v16h16v18h-16v16h-18v-16h-16V92h16z" fill="#1677E8"/>
+        <text x="300" y="168" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="26" font-weight="800" fill="#fff">ShifaCare</text>
+        <g fill="#BBD9FA">
+          <rect x="155" y="220" width="54" height="54" rx="8"/><rect x="273" y="220" width="54" height="54" rx="8"/><rect x="391" y="220" width="54" height="54" rx="8"/>
+          <rect x="155" y="300" width="54" height="54" rx="8"/><rect x="391" y="300" width="54" height="54" rx="8"/>
+        </g>
+        <rect x="262" y="330" width="76" height="120" rx="10" fill="#124A8A"/>
+        <rect x="270" y="338" width="28" height="112" fill="#7DB5F5" opacity=".6"/><rect x="302" y="338" width="28" height="112" fill="#7DB5F5" opacity=".6"/>
+        <rect x="80" y="450" width="440" height="14" rx="7" fill="#9CC6F7"/>
+        <!-- doctor -->
+        <g>
+          <rect x="132" y="372" width="86" height="88" rx="30" fill="#fff" stroke="#1677E8" stroke-width="4"/>
+          <rect x="140" y="440" width="26" height="22" rx="6" fill="#124A8A"/><rect x="184" y="440" width="26" height="22" rx="6" fill="#124A8A"/>
+          <circle cx="175" cy="346" r="30" fill="#F2C29B"/>
+          <path d="M145 342c2-24 18-32 32-30 14 1 26 12 28 30-10-12-24-16-60 0z" fill="#3A2A20"/>
+          <path d="M158 384c0 24 34 24 34 0" fill="none" stroke="#124A8A" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="175" cy="414" r="7" fill="#1677E8"/>
+          <circle cx="166" cy="348" r="3" fill="#3A2A20"/><circle cx="184" cy="348" r="3" fill="#3A2A20"/>
+          <path d="M168 358q7 6 14 0" fill="none" stroke="#3A2A20" stroke-width="3" stroke-linecap="round"/>
+        </g>
+        <!-- patient -->
+        <g>
+          <rect x="388" y="386" width="76" height="76" rx="26" fill="#1677E8"/>
+          <circle cx="426" cy="362" r="26" fill="#E9B88E"/>
+          <path d="M400 360c2-22 16-28 28-26 12 2 22 10 24 26-8-10-22-12-52 0z" fill="#2B2B2B"/>
+          <circle cx="418" cy="364" r="2.800" fill="#2B2B2B"/><circle cx="434" cy="364" r="2.800" fill="#2B2B2B"/>
+          <path d="M419 373q7 5 14 0" fill="none" stroke="#2B2B2B" stroke-width="3" stroke-linecap="round"/>
+        </g>
+        <!-- floating cards -->
+        <g>
+          <rect x="400" y="60" width="180" height="84" rx="18" fill="#fff" stroke="#CFE2F8" stroke-width="3"/>
+          <circle cx="440" cy="102" r="20" fill="#E3F6EE"/>
+          <path d="M431 102l6 6 12-13" fill="none" stroke="#16A36A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="470" y="98" font-family="Inter,Arial,sans-serif" font-size="17" font-weight="800" fill="#172B4D">Booked</text>
+          <text x="470" y="120" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="600" fill="#4A5F82">10:00 AM</text>
+        </g>
+        <g>
+          <rect x="22" y="200" width="196" height="84" rx="18" fill="#fff" stroke="#CFE2F8" stroke-width="3"/>
+          <circle cx="62" cy="242" r="20" fill="#E3F6EE"/>
+          <circle cx="62" cy="242" r="8" fill="#16A36A"/>
+          <text x="92" y="238" font-family="Inter,Arial,sans-serif" font-size="17" font-weight="800" fill="#172B4D">Low Crowd</text>
+          <text x="92" y="262" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="600" fill="#4A5F82">~15 min wait</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="container service-row">
+    <a class="card service-card reveal" href="#booking">
+      <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg></span>
+      <h3>Skip the Long Queue</h3>
+      <p>Book an appointment before you arrive.</p>
+      <span class="card-link">Book now <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></span>
+    </a>
+    <a class="card service-card reveal" href="#crowd">
+      <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg></span>
+      <h3>Check Hospital Crowds</h3>
+      <p>See crowd levels and estimated waiting times.</p>
+      <span class="card-link">See crowds <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></span>
+    </a>
+    <a class="card service-card reveal" href="#medicine">
+      <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="#i-coins"></use></svg></span>
+      <h3>Pay for Medicine in Parts</h3>
+      <p>Spread eligible medicine costs across installments.</p>
+      <span class="card-link">View plans <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></span>
+    </a>
+  </div>
+</section>
+
+<!-- ===================== HOSPITAL SEARCH ===================== -->
+<section class="section" id="hospitals" aria-labelledby="hospitals-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><svg class="icon" aria-hidden="true"><use href="#i-hospital"></use></svg> Find Hospitals</span>
+      <h2 id="hospitals-title">Find the Right Hospital Near You</h2>
+      <p class="lead">Search by name or location, then filter by governorate, specialty, or availability.</p>
+      <p class="demo-note"><svg class="icon" aria-hidden="true"><use href="#i-info"></use></svg> All hospitals shown are <strong>demonstration data</strong>, not verified real-world information.</p>
+    </div>
+
+    <form class="filters card reveal" role="search" id="hospital-filters" onsubmit="return false">
+      <div class="field field-search">
+        <label for="hospital-search">Search hospital or location</label>
+        <div class="input-icon">
+          <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+          <input type="search" id="hospital-search" placeholder="e.g. Nasr City, Giza, Alexandria…" autocomplete="off">
+        </div>
+      </div>
+      <div class="field">
+        <label for="filter-gov">Governorate</label>
+        <select id="filter-gov"><option value="">All governorates</option></select>
+      </div>
+      <div class="field">
+        <label for="filter-spec">Specialty</label>
+        <select id="filter-spec"><option value="">All specialties</option></select>
+      </div>
+      <div class="field">
+        <label for="filter-avail">Availability</label>
+        <select id="filter-avail">
+          <option value="">Any availability</option>
+          <option value="today">Appointments left today</option>
+          <option value="open24">Open 24 hours</option>
+        </select>
+      </div>
+    </form>
+
+    <div class="results-bar">
+      <p class="results-count" id="hospital-count" aria-live="polite"></p>
+      <button class="btn btn-ghost" id="reset-filters" type="button"><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg> Clear filters</button>
+    </div>
+
+    <div class="grid grid-3" id="hospital-grid"></div>
+    <div class="empty-state card" id="hospital-empty" hidden>
+      <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+      <h3>No hospitals match your search</h3>
+      <p>Try a different word or clear the filters.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CROWD LEVELS ===================== -->
+<section class="section section-alt" id="crowd" aria-labelledby="crowd-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg> Crowd Levels</span>
+      <h2 id="crowd-title">Check the Crowd Before You Go</h2>
+      <p class="lead">See how busy a hospital is before you travel there.</p>
+      <p class="demo-note"><svg class="icon" aria-hidden="true"><use href="#i-info"></use></svg> <strong>Simulated data.</strong> This is not live and is not connected to real hospitals. It is designed so a real queue system could be connected later.</p>
+    </div>
+
+    <ul class="legend reveal" aria-label="Crowd level key">
+      <li class="low"><svg class="icon" aria-hidden="true"><use href="#i-check-circle"></use></svg><span><strong>Low Crowd</strong> Short wait</span></li>
+      <li class="moderate"><svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg><span><strong>Moderate Crowd</strong> Some waiting</span></li>
+      <li class="high"><svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg><span><strong>Very Crowded</strong> Long wait</span></li>
+    </ul>
+
+    <div class="crowd-controls">
+      <div class="chips" id="crowd-filters" role="group" aria-label="Filter by crowd level">
+        <button type="button" class="chip" data-level="" aria-pressed="true">All hospitals</button>
+        <button type="button" class="chip chip-low" data-level="low" aria-pressed="false">Low crowd</button>
+        <button type="button" class="chip chip-moderate" data-level="moderate" aria-pressed="false">Moderate</button>
+        <button type="button" class="chip chip-high" data-level="high" aria-pressed="false">Very crowded</button>
+      </div>
+      <button class="btn btn-secondary" id="crowd-refresh" type="button"><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg> Simulate an update</button>
+    </div>
+    <p class="sr-only" id="crowd-live" aria-live="polite"></p>
+
+    <div class="grid grid-3" id="crowd-grid"></div>
+  </div>
+</section>
+
+<!-- ===================== BOOKING ===================== -->
+<section class="section" id="booking" aria-labelledby="booking-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><svg class="icon" aria-hidden="true"><use href="#i-calendar-check"></use></svg> Book Appointment</span>
+      <h2 id="booking-title">Book Your Visit in Minutes</h2>
+      <p class="lead">Six simple steps. No account needed.</p>
+      <p class="demo-note"><svg class="icon" aria-hidden="true"><use href="#i-info"></use></svg> <strong>Demonstration only.</strong> No real hospital receives this booking. Real reservations need a secure backend and participating hospitals.</p>
+    </div>
+
+    <div class="card wizard" id="wizard">
+      <ol class="stepper" id="stepper" aria-label="Booking progress">
+        <li data-step="1"><span class="dot">1</span><span class="label">Hospital</span></li>
+        <li data-step="2"><span class="dot">2</span><span class="label">Specialty</span></li>
+        <li data-step="3"><span class="dot">3</span><span class="label">Date</span></li>
+        <li data-step="4"><span class="dot">4</span><span class="label">Time</span></li>
+        <li data-step="5"><span class="dot">5</span><span class="label">Your details</span></li>
+        <li data-step="6"><span class="dot">6</span><span class="label">Confirm</span></li>
+      </ol>
+
+      <div class="panels">
+        <div class="panel" data-panel="1">
+          <h3 tabindex="-1"><svg class="icon" aria-hidden="true"><use href="#i-hospital"></use></svg> Step 1: Choose a hospital</h3>
+          <div class="choice-grid" id="hospital-choices"></div>
+        </div>
+
+        <div class="panel" data-panel="2" hidden>
+          <h3 tabindex="-1"><svg class="icon" aria-hidden="true"><use href="#i-stethoscope"></use></svg> Step 2: Choose a medical specialty</h3>
+          <div class="choice-grid choice-grid-4" id="specialty-choices"></div>
+        </div>
+
+        <div class="panel" data-panel="3" hidden>
+          <h3 tabindex="-1"><svg class="icon" aria-hidden="true"><use href="#i-calendar"></use></svg> Step 3: Choose a date</h3>
+          <div class="calendar" id="calendar"></div>
+        </div>
+
+        <div class="panel" data-panel="4" hidden>
+          <h3 tabindex="-1"><svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg> Step 4: Choose a time</h3>
+          <p class="panel-hint" id="time-hint"></p>
+          <div class="slots" id="time-slots"></div>
+          <ul class="slot-legend" aria-hidden="true">
+            <li><span class="swatch free"></span> Available</li>
+            <li><span class="swatch sel"></span> Selected</li>
+            <li><span class="swatch busy"></span> Unavailable</li>
+          </ul>
+        </div>
+
+        <div class="panel" data-panel="5" hidden>
+          <h3 tabindex="-1"><svg class="icon" aria-hidden="true"><use href="#i-user"></use></svg> Step 5: Your details</h3>
+          <form id="patient-form" novalidate onsubmit="return false">
+            <div class="form-grid">
+              <div class="field">
+                <label for="p-name">Full name</label>
+                <input id="p-name" name="name" type="text" autocomplete="name" placeholder="e.g. Ahmed Mohamed" aria-describedby="err-name" required>
+                <p class="field-error" id="err-name" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="p-phone">Phone number</label>
+                <input id="p-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="e.g. 0100 123 4567" aria-describedby="err-phone" required>
+                <p class="field-error" id="err-phone" role="alert"></p>
+              </div>
+              <div class="field field-wide">
+                <label for="p-email">Email <span class="optional">(optional)</span></label>
+                <input id="p-email" name="email" type="email" autocomplete="email" placeholder="e.g. name@example.com" aria-describedby="err-email">
+                <p class="field-error" id="err-email" role="alert"></p>
+              </div>
+            </div>
+            <p class="privacy-note"><svg class="icon" aria-hidden="true"><use href="#i-lock"></use></svg> Your details stay in this browser tab and are never sent anywhere. Please use made-up details for the demo.</p>
+          </form>
+        </div>
+
+        <div class="panel" data-panel="6" hidden>
+          <h3 tabindex="-1"><svg class="icon" aria-hidden="true"><use href="#i-check-circle"></use></svg> Step 6: Confirm your appointment</h3>
+          <dl class="summary" id="summary"></dl>
+        </div>
+      </div>
+
+      <p class="step-error" id="step-error" role="alert"></p>
+
+      <div class="wizard-nav">
+        <button class="btn btn-secondary btn-lg" id="btn-back" type="button" hidden><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"></use></svg> Back</button>
+        <button class="btn btn-primary btn-lg" id="btn-next" type="button">Continue <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg></button>
+      </div>
+    </div>
+
+    <!-- Success -->
+    <div class="card success" id="booking-success" hidden>
+      <div class="success-check" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><circle class="ring" cx="60" cy="60" r="54"/><path class="tick" d="M34 62l17 17 35-38"/></svg>
+      </div>
+      <h3 tabindex="-1">Your Appointment Is Booked!</h3>
+      <p class="demo-note center"><svg class="icon" aria-hidden="true"><use href="#i-info"></use></svg> Demonstration only. No real hospital has received this booking.</p>
+      <div class="ticket" id="ticket">
+        <div class="ticket-head"><span class="logo-mark"><svg class="icon" aria-hidden="true"><use href="#i-cross"></use></svg></span> ShifaCare · Demo Appointment</div>
+        <p class="ref-label">Booking reference</p>
+        <p class="ref" id="ticket-ref"></p>
+        <dl class="summary" id="ticket-details"></dl>
+        <p class="ticket-foot">Educational demonstration. This is not a valid medical appointment.</p>
+      </div>
+      <div class="success-actions">
+        <button class="btn btn-primary btn-lg" id="btn-print" type="button"><svg class="icon" aria-hidden="true"><use href="#i-print"></use></svg> Print or Save Confirmation</button>
+        <button class="btn btn-secondary btn-lg" id="btn-again" type="button"><svg class="icon" aria-hidden="true"><use href="#i-calendar"></use></svg> Book Another Visit</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MEDICINE ===================== -->
+<section class="section section-alt" id="medicine" aria-labelledby="medicine-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><svg class="icon" aria-hidden="true"><use href="#i-pill"></use></svg> Medicine Support</span>
+      <h2 id="medicine-title">Get Your Medicine. Pay in Parts.</h2>
+      <p class="lead">Access eligible medicines without having to pay the entire cost at once.</p>
+      <p class="demo-note"><svg class="icon" aria-hidden="true"><use href="#i-info"></use></svg> <strong>Demonstration catalog.</strong> Products and prices are illustrative. This is not medical advice.</p>
+    </div>
+
+    <div class="grid grid-3" id="med-grid"></div>
+
+    <div class="card calc" id="calculator">
+      <div class="calc-head">
+        <h3><svg class="icon" aria-hidden="true"><use href="#i-coins"></use></svg> Installment Calculator</h3>
+        <p class="no-fee"><svg class="icon" aria-hidden="true"><use href="#i-check-circle"></use></svg> Interest-free. No extra fees. <span>(Demo assumption)</span></p>
+      </div>
+
+      <div class="calc-grid">
+        <div class="calc-left">
+          <div class="field">
+            <label for="med-select">1. Select your medicine</label>
+            <select id="med-select"></select>
+          </div>
+          <div class="price-box" aria-live="polite">
+            <span class="price-label">2. Full price</span>
+            <span class="price-value" id="med-price"></span>
+            <span class="price-pack" id="med-pack"></span>
+            <span class="rx-note" id="med-rx" hidden><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg> Prescription required</span>
+          </div>
+
+          <fieldset class="plans">
+            <legend>3. Choose a payment plan</legend>
+            <div id="plan-options"></div>
+          </fieldset>
+        </div>
+
+        <div class="calc-right">
+          <h4>4. Your payment schedule</h4>
+          <ol class="schedule" id="schedule" aria-live="polite"></ol>
+          <div class="schedule-total" id="schedule-total"></div>
+          <button class="btn btn-primary btn-lg btn-block" id="med-choose" type="button"><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg> Choose This Plan</button>
+        </div>
+      </div>
+
+      <div class="plan-confirm" id="plan-confirm" hidden tabindex="-1">
+        <div class="confirm-top">
+          <span class="icon-badge green"><svg class="icon" aria-hidden="true"><use href="#i-check-circle"></use></svg></span>
+          <div>
+            <h4>Plan Selected (Demo)</h4>
+            <p>Nothing was paid and no financial details were collected.</p>
+          </div>
+        </div>
+        <dl class="summary" id="plan-confirm-body"></dl>
+        <button class="btn btn-secondary" id="plan-change" type="button"><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg> Change plan</button>
+      </div>
+    </div>
+
+    <div class="card info-box reveal">
+      <h3><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg> What a real service would need</h3>
+      <ul class="check-list">
+        <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg> Participating pharmacies</li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg> A funding partner or approved payment provider</li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg> Clear, transparent eligibility rules</li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg> Secure payment processing</li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg> Prescription medicines dispensed only as Egyptian law and pharmacy rules require</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section class="section" id="how-it-works" aria-labelledby="how-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><svg class="icon" aria-hidden="true"><use href="#i-list"></use></svg> How It Works</span>
+      <h2 id="how-title">Simple Steps. Clear Results.</h2>
+    </div>
+
+    <h3 class="flow-title reveal"><svg class="icon" aria-hidden="true"><use href="#i-calendar-check"></use></svg> Booking an appointment</h3>
+    <div class="steps reveal">
+      <article class="card step-card">
+        <span class="step-num">01</span>
+        <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg></span>
+        <h4>Find a Hospital</h4>
+        <p>Search nearby or preferred hospitals and compare their reported crowd levels.</p>
+      </article>
+      <article class="card step-card">
+        <span class="step-num">02</span>
+        <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="#i-calendar"></use></svg></span>
+        <h4>Choose Your Time</h4>
+        <p>Select a specialty, date, and available appointment slot.</p>
+      </article>
+      <article class="card step-card">
+        <span class="step-num">03</span>
+        <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="#i-check-circle"></use></svg></span>
+        <h4>Visit With Confidence</h4>
+        <p>Receive a booking confirmation and arrive at the scheduled time.</p>
+      </article>
+    </div>
+
+    <h3 class="flow-title reveal"><svg class="icon" aria-hidden="true"><use href="#i-pill"></use></svg> Paying for medicine in installments</h3>
+    <div class="steps reveal">
+      <article class="card step-card">
+        <span class="step-num">01</span>
+        <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="#i-bottle"></use></svg></span>
+        <h4>Select Your Medicine</h4>
+        <p>Browse eligible medicines and view their prices.</p>
+      </article>
+      <article class="card step-card">
+        <span class="step-num">02</span>
+        <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="#i-coins"></use></svg></span>
+        <h4>Choose a Payment Plan</h4>
+        <p>Compare the number and amount of installments.</p>
+      </article>
+      <article class="card step-card">
+        <span class="step-num">03</span>
+        <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="#i-wallet"></use></svg></span>
+        <h4>Pay in Parts</h4>
+        <p>Review the schedule and follow the payment arrangement offered by the participating provider.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WHY SHIFACARE ===================== -->
+<section class="section section-alt" id="why" aria-labelledby="why-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><svg class="icon" aria-hidden="true"><use href="#i-heart-pulse"></use></svg> Why ShifaCare?</span>
+      <h2 id="why-title">Real Problems. Practical Ideas.</h2>
+      <p class="lead">Four everyday difficulties in healthcare, and how technology could help.</p>
+    </div>
+
+    <div class="grid grid-2">
+      <article class="card why-card reveal">
+        <div class="problem"><span class="tag tag-red">Problem</span><span class="icon-badge red"><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg></span><h3>Long Waiting Lines</h3></div>
+        <div class="arrow" aria-hidden="true"><svg class="icon"><use href="#i-arrow-right"></use></svg></div>
+        <div class="solution"><span class="tag tag-green">Solution</span><span class="icon-badge green"><svg class="icon" aria-hidden="true"><use href="#i-calendar-check"></use></svg></span><p>Online appointment booking helps organize visits and reduce unnecessary waiting.</p></div>
+      </article>
+      <article class="card why-card reveal">
+        <div class="problem"><span class="tag tag-red">Problem</span><span class="icon-badge red"><svg class="icon" aria-hidden="true"><use href="#i-hospital"></use></svg></span><h3>Unclear Hospital Crowds</h3></div>
+        <div class="arrow" aria-hidden="true"><svg class="icon"><use href="#i-arrow-right"></use></svg></div>
+        <div class="solution"><span class="tag tag-green">Solution</span><span class="icon-badge green"><svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg></span><p>Crowd indicators and estimated waiting times help patients plan their visits.</p></div>
+      </article>
+      <article class="card why-card reveal">
+        <div class="problem"><span class="tag tag-red">Problem</span><span class="icon-badge red"><svg class="icon" aria-hidden="true"><use href="#i-accessibility"></use></svg></span><h3>Difficulty Accessing Healthcare</h3></div>
+        <div class="arrow" aria-hidden="true"><svg class="icon"><use href="#i-arrow-right"></use></svg></div>
+        <div class="solution"><span class="tag tag-green">Solution</span><span class="icon-badge green"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg></span><p>Hospital search and specialty filters make it easier to find appropriate services.</p></div>
+      </article>
+      <article class="card why-card reveal">
+        <div class="problem"><span class="tag tag-red">Problem</span><span class="icon-badge red"><svg class="icon" aria-hidden="true"><use href="#i-wallet"></use></svg></span><h3>High Upfront Medicine Costs</h3></div>
+        <div class="arrow" aria-hidden="true"><svg class="icon"><use href="#i-arrow-right"></use></svg></div>
+        <div class="solution"><span class="tag tag-green">Solution</span><span class="icon-badge green"><svg class="icon" aria-hidden="true"><use href="#i-coins"></use></svg></span><p>Transparent installment options can help eligible patients spread costs over time.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GOALS ===================== -->
+<section class="section stats" id="goals" aria-labelledby="goals-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow eyebrow-light"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"></use></svg> Project Goals</span>
+      <h2 id="goals-title">What ShifaCare Aims For</h2>
+      <p class="lead">These are project goals, not measured results.</p>
+    </div>
+    <div class="grid grid-3">
+      <article class="stat-card reveal">
+        <svg class="icon" aria-hidden="true"><use href="#i-calendar-check"></use></svg>
+        <h3>Less Waiting</h3>
+        <p>The goal of booking ahead.</p>
+        <span class="stat-demo"><strong data-count="hospitals">9</strong> demo hospitals to book</span>
+      </article>
+      <article class="stat-card reveal">
+        <svg class="icon" aria-hidden="true"><use href="#i-trending"></use></svg>
+        <h3>Better Planning</h3>
+        <p>The benefit of checking reported crowd levels.</p>
+        <span class="stat-demo"><strong>3</strong> crowd levels to compare</span>
+      </article>
+      <article class="stat-card reveal">
+        <svg class="icon" aria-hidden="true"><use href="#i-wallet"></use></svg>
+        <h3>Flexible Payments</h3>
+        <p>The benefit of spreading eligible medicine costs.</p>
+        <span class="stat-demo"><strong>2–4</strong> installment options</span>
+      </article>
+    </div>
+    <p class="stats-note">Numbers above only describe what is in this demonstration. They are not real-world statistics.</p>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a href="#home" class="logo logo-light" aria-label="ShifaCare home">
+        <span class="logo-mark"><svg class="icon" aria-hidden="true"><use href="#i-cross"></use></svg></span>
+        <span class="logo-text">ShifaCare</span>
+      </a>
+      <p class="footer-tag">Better Healthcare, Less Waiting.</p>
+    </div>
+    <div>
+      <h4>Quick links</h4>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#hospitals">Find Hospitals</a></li>
+        <li><a href="#booking">Book Appointment</a></li>
+        <li><a href="#medicine">Medicine Support</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact (placeholder)</h4>
+      <ul class="contact">
+        <li><svg class="icon" aria-hidden="true"><use href="#i-phone"></use></svg> +20 107031037</li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-mail"></use></svg> contact@shifacare.come</li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-pin"></use></svg> Cairo, Egypt</li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg> Emergency? Call the ambulance: 123</li>
+      </ul>
+    </div>
+  </div>
+  <div class="container">
+    <p class="disclaimer">ShifaCare is an educational ICT project. Hospital crowd levels, appointment availability, and medicine prices shown in this demonstration are illustrative. Real bookings, live hospital data, and medicine installment services require participating healthcare providers and secure system integrations.</p>
+    <p class="copyright">© <span id="year"></span> ShifaCare · School project demonstration</p>
+  </div>
+</footer>
+
+<script>
+/* ==========================================================
+   ShifaCare — script.js
+   Vanilla JS front-end demonstration. All data is simulated.
+   ========================================================== */
+(function () {
+  'use strict';
+
+  document.documentElement.classList.add('js');
+
+  /* ---------------------------------------------------------
+     DATA (demonstration only — replace with an API later)
+     --------------------------------------------------------- */
+  var SPECIALTIES = [
+    { id: 'general',    name: 'General Medicine',      icon: 'i-stethoscope' },
+    { id: 'cardiology', name: 'Cardiology',            icon: 'i-heart-pulse' },
+    { id: 'derm',       name: 'Dermatology',           icon: 'i-droplet' },
+    { id: 'pediatrics', name: 'Pediatrics',            icon: 'i-smile' },
+    { id: 'ortho',      name: 'Orthopedics',           icon: 'i-bone' },
+    { id: 'eye',        name: 'Ophthalmology',         icon: 'i-eye' },
+    { id: 'dental',     name: 'Dentistry',             icon: 'i-tooth' },
+    { id: 'ent',        name: 'Ear, Nose, and Throat', icon: 'i-ear' }
+  ];
+  var SPEC_NAME = {};
+  SPECIALTIES.forEach(function (s) { SPEC_NAME[s.id] = s.name; });
+
+  // crowd: people waiting; wait: minutes. Level is derived from wait time.
+  var HOSPITALS = [
+    { id: 'h1', name: 'Nile Valley Demo Hospital',     gov: 'Cairo',      area: 'Nasr City, Cairo',        hours: '8:00 AM – 10:00 PM', open24: false, specs: ['general','cardiology','pediatrics','ent'],          waiting: 8,  wait: 15, slotsToday: 5 },
+    { id: 'h2', name: 'Pyramid View Demo Clinic',      gov: 'Giza',       area: 'Dokki, Giza',             hours: '9:00 AM – 9:00 PM',  open24: false, specs: ['general','derm','dental','eye'],                   waiting: 23, wait: 40, slotsToday: 3 },
+    { id: 'h3', name: 'Mediterranean Demo Hospital',   gov: 'Alexandria', area: 'Smouha, Alexandria',      hours: 'Open 24 hours',      open24: true,  specs: ['general','ortho','cardiology','pediatrics','ent'], waiting: 55, wait: 90, slotsToday: 2 },
+    { id: 'h4', name: 'Cairo Heights Demo Medical',    gov: 'Cairo',      area: 'Heliopolis, Cairo',       hours: '8:00 AM – 8:00 PM',  open24: false, specs: ['derm','eye','dental'],                             waiting: 6,  wait: 10, slotsToday: 6 },
+    { id: 'h5', name: 'Giza Family Demo Hospital',     gov: 'Giza',       area: '6th of October City, Giza', hours: 'Open 24 hours',    open24: true,  specs: ['general','pediatrics','ortho','ent'],              waiting: 31, wait: 55, slotsToday: 4 },
+    { id: 'h6', name: 'Corniche Demo Specialty Center',gov: 'Alexandria', area: 'Corniche, Alexandria',    hours: '10:00 AM – 8:00 PM', open24: false, specs: ['cardiology','eye','ortho'],                        waiting: 14, wait: 25, slotsToday: 0 },
+    { id: 'h7', name: 'Delta Demo General Hospital',   gov: 'Dakahlia',   area: 'Mansoura, Dakahlia',      hours: '8:00 AM – 9:00 PM',  open24: false, specs: ['general','pediatrics','dental'],                   waiting: 18, wait: 30, slotsToday: 4 },
+    { id: 'h8', name: 'Upper Egypt Demo Medical City', gov: 'Assiut',     area: 'Assiut City, Assiut',     hours: 'Open 24 hours',      open24: true,  specs: ['general','cardiology','ortho','derm'],             waiting: 47, wait: 75, slotsToday: 2 },
+    { id: 'h9', name: 'Red Sea Demo Health Center',    gov: 'Red Sea',    area: 'Hurghada, Red Sea',       hours: '9:00 AM – 7:00 PM',  open24: false, specs: ['general','ent','dental'],                          waiting: 5,  wait: 10, slotsToday: 5 }
+  ];
+
+  var MEDICINES = [
+    { id: 'm1', name: 'Pain Relief Tablets (Demo)',   pack: 'Box of 24 tablets',  price: 600,  plans: [2,3,4], rx: false, icon: 'i-pill' },
+    { id: 'm2', name: 'Vitamin D Capsules (Demo)',    pack: 'Bottle of 60',       price: 450,  plans: [2,3],   rx: false, icon: 'i-bottle' },
+    { id: 'm3', name: 'Blood Pressure Tablets (Demo)',pack: 'Box of 30 tablets',  price: 850,  plans: [2,3,4], rx: true,  icon: 'i-pill' },
+    { id: 'm4', name: 'Diabetes Care Pack (Demo)',    pack: 'Monthly supply',     price: 1250, plans: [2,3,4], rx: true,  icon: 'i-droplet' },
+    { id: 'm5', name: 'Children’s Syrup (Demo)', pack: '120 ml bottle',      price: 190,  plans: [2],     rx: false, icon: 'i-bottle' },
+    { id: 'm6', name: 'Asthma Inhaler (Demo)',        pack: '1 inhaler, 200 doses',price: 1000, plans: [2,3,4], rx: true,  icon: 'i-heart-pulse' }
+  ];
+
+  var TIME_SLOTS = ['9:00 AM', '10:00 AM', '11:30 AM', '1:00 PM', '2:30 PM', '4:00 PM', '5:30 PM', '7:00 PM'];
+
+  /* ---------------------------------------------------------
+     HELPERS
+     --------------------------------------------------------- */
+  function $(sel, root) { return (root || document).querySelector(sel); }
+  function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+
+  function esc(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function icon(id) { return '<svg class="icon" aria-hidden="true"><use href="#' + id + '"></use></svg>'; }
+
+  function level(min) { return min <= 20 ? 'low' : (min <= 60 ? 'moderate' : 'high'); }
+  var LEVEL_INFO = {
+    low:      { label: 'Low Crowd',    icon: 'i-check-circle', note: 'Short waiting time',     bars: 1 },
+    moderate: { label: 'Moderate Crowd', icon: 'i-clock',      note: 'Some waiting expected',  bars: 2 },
+    high:     { label: 'Very Crowded', icon: 'i-alert',        note: 'Long waiting time expected', bars: 3 }
+  };
+
+  function hospitalById(id) { return HOSPITALS.filter(function (h) { return h.id === id; })[0]; }
+  function medById(id) { return MEDICINES.filter(function (m) { return m.id === id; })[0]; }
+
+  function egp(n) { return 'EGP ' + Number(n).toLocaleString('en-US'); }
+
+  // Split a total (in whole pounds) into n parts that add up EXACTLY.
+  // Works in piastres (integers) so there is no floating-point error.
+  function splitPayments(total, n) {
+    var cents = Math.round(total * 100);
+    var base = Math.floor(cents / n);
+    var extra = cents - base * n;          // leftover piastres
+    var parts = [];
+    for (var i = 0; i < n; i++) {
+      // leftover goes to the first payments, so the LAST ones are never larger
+      parts.push((base + (i < extra ? 1 : 0)) / 100);
+    }
+    return parts;
+  }
+  function money(n) {
+    return 'EGP ' + (Number.isInteger(n) ? n.toLocaleString('en-US') : n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+  }
+
+  function ordinal(i) { return ['First', 'Second', 'Third', 'Fourth'][i]; }
+
+  function timeNow() {
+    return new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  }
+
+  // Deterministic pseudo-random so slot availability is stable per hospital+date.
+  function hash(str) {
+    var h = 2166136261;
+    for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  }
+
+  function toISO(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function prettyDate(iso) {
+    var p = iso.split('-');
+    var d = new Date(+p[0], +p[1] - 1, +p[2]);
+    return d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+  function startOfToday() { var d = new Date(); d.setHours(0, 0, 0, 0); return d; }
+
+  function safeStore(op, key, val) {
+    try {
+      if (op === 'get') return JSON.parse(localStorage.getItem(key) || 'null');
+      localStorage.setItem(key, JSON.stringify(val));
+    } catch (e) { /* storage may be blocked — the demo still works */ }
+    return null;
+  }
+
+  /* ---------------------------------------------------------
+     NAVIGATION
+     --------------------------------------------------------- */
+  var header = $('#site-header');
+  var toggle = $('#menu-toggle');
+
+  function setMenu(open) {
+    header.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+  toggle.addEventListener('click', function () { setMenu(!header.classList.contains('open')); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && header.classList.contains('open')) { setMenu(false); toggle.focus(); }
+  });
+  $$('#site-menu a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+  window.addEventListener('resize', function () { if (window.innerWidth > 1100) setMenu(false); });
+
+  // Highlight the link of the section in view
+  var navLinks = $$('[data-nav]');
+  var sectionIds = navLinks.map(function (a) { return a.getAttribute('href').slice(1); });
+  if ('IntersectionObserver' in window) {
+    var navObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          navLinks.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + en.target.id); });
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    sectionIds.forEach(function (id) { var el = document.getElementById(id); if (el) navObs.observe(el); });
+  }
+
+  // Scroll-reveal
+  var reveals = $$('.reveal');
+  if ('IntersectionObserver' in window) {
+    var revObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); revObs.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(function (el) { revObs.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  $('#year').textContent = new Date().getFullYear();
+
+  /* ---------------------------------------------------------
+     HOSPITAL SEARCH
+     --------------------------------------------------------- */
+  var elSearch = $('#hospital-search');
+  var elGov = $('#filter-gov');
+  var elSpec = $('#filter-spec');
+  var elAvail = $('#filter-avail');
+  var elGrid = $('#hospital-grid');
+  var elEmpty = $('#hospital-empty');
+  var elCount = $('#hospital-count');
+
+  // Populate filter dropdowns
+  var govs = [];
+  HOSPITALS.forEach(function (h) { if (govs.indexOf(h.gov) === -1) govs.push(h.gov); });
+  govs.sort().forEach(function (g) { elGov.insertAdjacentHTML('beforeend', '<option value="' + esc(g) + '">' + esc(g) + '</option>'); });
+  SPECIALTIES.forEach(function (s) { elSpec.insertAdjacentHTML('beforeend', '<option value="' + s.id + '">' + esc(s.name) + '</option>'); });
+
+  function hospitalCard(h) {
+    var lv = level(h.wait), info = LEVEL_INFO[lv];
+    return '<article class="card hospital-card reveal in">' +
+      '<div class="hospital-top"><span class="avatar">' + icon('i-hospital') + '</span>' +
+      '<div><h3>' + esc(h.name) + '</h3><p class="loc">' + icon('i-pin') + esc(h.area) + '</p></div></div>' +
+      '<span class="demo-tag">Demo data</span>' +
+      '<ul class="tags" aria-label="Specialties">' + h.specs.map(function (s) { return '<li>' + esc(SPEC_NAME[s]) + '</li>'; }).join('') + '</ul>' +
+      '<p class="hours">' + icon('i-clock') + esc(h.hours) + '</p>' +
+      '<div class="crowd-pill ' + lv + '">' + icon(info.icon) + '<span><strong>' + info.label + '</strong> · about ' + h.wait + ' min wait</span></div>' +
+      '<button type="button" class="btn btn-primary" data-book="' + h.id + '">' + icon('i-calendar-check') + ' View Details &amp; Book</button>' +
+      '</article>';
+  }
+
+  function filterHospitals() {
+    var q = elSearch.value.trim().toLowerCase();
+    var gov = elGov.value, spec = elSpec.value, av = elAvail.value;
+    return HOSPITALS.filter(function (h) {
+      if (q && (h.name + ' ' + h.area + ' ' + h.gov).toLowerCase().indexOf(q) === -1) return false;
+      if (gov && h.gov !== gov) return false;
+      if (spec && h.specs.indexOf(spec) === -1) return false;
+      if (av === 'today' && h.slotsToday < 1) return false;
+      if (av === 'open24' && !h.open24) return false;
+      return true;
+    });
+  }
+
+  function renderHospitals() {
+    var list = filterHospitals();
+    elGrid.innerHTML = list.map(hospitalCard).join('');
+    elEmpty.hidden = list.length !== 0;
+    elCount.textContent = list.length === 1 ? '1 demo hospital found' : list.length + ' demo hospitals found';
+  }
+
+  [elSearch, elGov, elSpec, elAvail].forEach(function (el) {
+    el.addEventListener(el === elSearch ? 'input' : 'change', renderHospitals);
+  });
+  $('#reset-filters').addEventListener('click', function () {
+    elSearch.value = ''; elGov.value = ''; elSpec.value = ''; elAvail.value = '';
+    renderHospitals(); elSearch.focus();
+  });
+
+  /* ---------------------------------------------------------
+     CROWD LEVELS
+     --------------------------------------------------------- */
+  var elCrowdGrid = $('#crowd-grid');
+  var crowdFilter = '';
+  var updatedAt = timeNow();
+
+  function crowdCard(h) {
+    var lv = level(h.wait), info = LEVEL_INFO[lv];
+    var pct = Math.min(100, Math.round(h.wait / 90 * 100));
+    var persons = '';
+    for (var i = 1; i <= 3; i++) persons += '<span class="' + (i <= info.bars ? 'on' : '') + '">' + icon('i-user') + '</span>';
+    return '<article class="card crowd-card ' + lv + ' pop-in" aria-label="' + esc(h.name) + ': ' + info.label + '">' +
+      '<div class="crowd-status">' + icon(info.icon) + '<span>' + info.label + '</span></div>' +
+      '<div class="crowd-body">' +
+        '<h3>' + esc(h.name) + '</h3>' +
+        '<p class="loc">' + icon('i-pin') + esc(h.area) + '</p>' +
+        '<div class="crowd-metrics">' +
+          '<div class="metric"><span class="metric-num">' + h.wait + '</span><span class="metric-label">minutes wait</span></div>' +
+          '<div class="metric"><span class="metric-num">' + h.waiting + '</span><span class="metric-label">people waiting</span></div>' +
+        '</div>' +
+        '<div class="meter" role="img" aria-label="Crowd meter ' + pct + ' percent"><div class="meter-fill" data-w="' + pct + '"></div></div>' +
+        '<p class="persons-row"><span class="persons" aria-hidden="true">' + persons + '</span>' + info.note + '</p>' +
+        '<p class="updated">' + icon('i-refresh') + 'Updated ' + updatedAt + ' · simulated</p>' +
+        '<button type="button" class="btn btn-primary" data-book="' + h.id + '">' + icon('i-calendar-check') + ' Book an Appointment</button>' +
+      '</div></article>';
+  }
+
+  function renderCrowd() {
+    var list = HOSPITALS.filter(function (h) { return !crowdFilter || level(h.wait) === crowdFilter; })
+      .sort(function (a, b) { return a.wait - b.wait; });
+    elCrowdGrid.innerHTML = list.map(crowdCard).join('');
+    // animate the meters on next frame
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        $$('.meter-fill', elCrowdGrid).forEach(function (m) { m.style.width = m.getAttribute('data-w') + '%'; });
+      });
+    });
+  }
+
+  $$('#crowd-filters .chip').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      crowdFilter = chip.getAttribute('data-level');
+      $$('#crowd-filters .chip').forEach(function (c) { c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'); });
+      renderCrowd();
+      var n = elCrowdGrid.children.length;
+      $('#crowd-live').textContent = n + (n === 1 ? ' hospital shown' : ' hospitals shown');
+    });
+  });
+
+  // "Simulate an update" nudges the demo numbers so the audience sees the indicators react
+  $('#crowd-refresh').addEventListener('click', function () {
+    HOSPITALS.forEach(function (h) {
+      var delta = Math.round((Math.random() * 30) - 15);
+      h.wait = Math.max(5, Math.min(100, h.wait + delta));
+      h.waiting = Math.max(2, Math.round(h.wait / 1.65));
+    });
+    updatedAt = timeNow();
+    renderCrowd(); renderHospitals();
+    if (booking.hospital) renderHospitalChoices();
+    $('#crowd-live').textContent = 'Simulated crowd levels updated at ' + updatedAt;
+  });
+
+  // Any "Book" button jumps to the wizard with that hospital pre-selected
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-book]');
+    if (!btn) return;
+    resetBooking(true);
+    booking.hospital = btn.getAttribute('data-book');
+    renderHospitalChoices();
+    showStep(2);
+    document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  /* ---------------------------------------------------------
+     BOOKING WIZARD
+     --------------------------------------------------------- */
+  var booking = { step: 1, hospital: null, specialty: null, date: null, time: null, name: '', phone: '', email: '' };
+  var calView = null; // first day of the month being shown
+
+  var elPanels = $$('.panel');
+  var elStepper = $$('#stepper li');
+  var elBack = $('#btn-back');
+  var elNext = $('#btn-next');
+  var elStepError = $('#step-error');
+  var TOTAL = 6;
+
+  function renderHospitalChoices() {
+    $('#hospital-choices').innerHTML = HOSPITALS.map(function (h) {
+      var lv = level(h.wait), info = LEVEL_INFO[lv];
+      return '<button type="button" class="choice" data-id="' + h.id + '" aria-pressed="' + (booking.hospital === h.id) + '">' +
+        '<span class="c-title">' + esc(h.name) + '</span>' +
+        '<span class="c-sub">' + icon('i-pin') + esc(h.area) + '</span>' +
+        '<span class="mini-badge ' + lv + '">' + icon(info.icon) + info.label + ' · ' + h.wait + ' min</span>' +
+        '</button>';
+    }).join('');
+  }
+  $('#hospital-choices').addEventListener('click', function (e) {
+    var b = e.target.closest('.choice'); if (!b) return;
+    var changed = booking.hospital !== b.getAttribute('data-id');
+    booking.hospital = b.getAttribute('data-id');
+    if (changed) { booking.specialty = null; booking.time = null; }
+    renderHospitalChoices(); hideError();
+  });
+
+  function renderSpecialtyChoices() {
+    var h = hospitalById(booking.hospital);
+    $('#specialty-choices').innerHTML = SPECIALTIES.map(function (s) {
+      var ok = h && h.specs.indexOf(s.id) !== -1;
+      return '<button type="button" class="choice" data-id="' + s.id + '" ' + (ok ? '' : 'disabled') + ' aria-pressed="' + (booking.specialty === s.id) + '">' +
+        '<span class="c-icon">' + icon(s.icon) + '</span>' +
+        '<span class="c-title">' + esc(s.name) + '</span>' +
+        (ok ? '' : '<span class="c-sub">Not offered here</span>') +
+        '</button>';
+    }).join('');
+  }
+  $('#specialty-choices').addEventListener('click', function (e) {
+    var b = e.target.closest('.choice'); if (!b || b.disabled) return;
+    booking.specialty = b.getAttribute('data-id');
+    renderSpecialtyChoices(); hideError();
+  });
+
+  /* Calendar */
+  function renderCalendar() {
+    var today = startOfToday();
+    if (!calView) calView = new Date(today.getFullYear(), today.getMonth(), 1);
+    var y = calView.getFullYear(), m = calView.getMonth();
+    var first = new Date(y, m, 1);
+    var daysInMonth = new Date(y, m + 1, 0).getDate();
+    var startDow = first.getDay(); // 0 = Sunday
+    var maxDate = new Date(today); maxDate.setDate(maxDate.getDate() + 90);
+    var atMin = (y === today.getFullYear() && m === today.getMonth());
+    var atMax = (y > maxDate.getFullYear()) || (y === maxDate.getFullYear() && m >= maxDate.getMonth());
+
+    var html = '<div class="cal-head">' +
+      '<button type="button" class="cal-nav" id="cal-prev" aria-label="Previous month" ' + (atMin ? 'disabled' : '') + '>' + icon('i-chevron-left') + '</button>' +
+      '<div class="cal-title" aria-live="polite">' + first.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }) + '</div>' +
+      '<button type="button" class="cal-nav" id="cal-next" aria-label="Next month" ' + (atMax ? 'disabled' : '') + '>' + icon('i-chevron-right') + '</button></div>';
+    html += '<div class="cal-grid">';
+    ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(function (d) { html += '<div class="cal-dow" aria-hidden="true">' + d + '</div>'; });
+    for (var i = 0; i < startDow; i++) html += '<div class="cal-blank"></div>';
+    for (var d = 1; d <= daysInMonth; d++) {
+      var date = new Date(y, m, d);
+      var iso = toISO(date);
+      var past = date < today, tooFar = date > maxDate;
+      var isFriday = date.getDay() === 5; // demo: many Egyptian clinics are closed on Fridays
+      var disabled = past || tooFar || isFriday;
+      var cls = 'cal-day' + (iso === toISO(today) ? ' today' : '');
+      html += '<button type="button" class="' + cls + '" data-date="' + iso + '" ' + (disabled ? 'disabled' : '') +
+        ' aria-pressed="' + (booking.date === iso) + '" aria-label="' + prettyDate(iso) + (isFriday ? ' (closed)' : '') + '">' + d + '</button>';
+    }
+    html += '</div>';
+    html += '<p class="cal-chosen">' + (booking.date ? icon('i-calendar-check') + ' ' + prettyDate(booking.date) : 'Past dates and Fridays (demo closed day) are unavailable.') + '</p>';
+    $('#calendar').innerHTML = html;
+  }
+  $('#calendar').addEventListener('click', function (e) {
+    var prev = e.target.closest('#cal-prev'), next = e.target.closest('#cal-next');
+    if (prev && !prev.disabled) { calView = new Date(calView.getFullYear(), calView.getMonth() - 1, 1); renderCalendar(); $('#cal-prev') && !$('#cal-prev').disabled ? $('#cal-prev').focus() : $('#cal-next').focus(); return; }
+    if (next && !next.disabled) { calView = new Date(calView.getFullYear(), calView.getMonth() + 1, 1); renderCalendar(); $('#cal-next') && !$('#cal-next').disabled ? $('#cal-next').focus() : $('#cal-prev').focus(); return; }
+    var day = e.target.closest('.cal-day');
+    if (day && !day.disabled) {
+      if (booking.date !== day.getAttribute('data-date')) booking.time = null;
+      booking.date = day.getAttribute('data-date');
+      renderCalendar(); hideError();
+      var again = $('.cal-day[data-date="' + booking.date + '"]'); if (again) again.focus();
+    }
+  });
+
+  /* Time slots — availability is simulated but stable for a given hospital + date */
+  function slotTaken(hospId, iso, time) {
+    var today = toISO(new Date());
+    if (iso === today) {
+      // slots already in the past today are unavailable
+      var m = time.match(/(\d+):(\d+) (AM|PM)/);
+      var hr = +m[1] % 12 + (m[3] === 'PM' ? 12 : 0), mn = +m[2];
+      var now = new Date();
+      if (hr * 60 + mn <= now.getHours() * 60 + now.getMinutes()) return true;
+    }
+    return hash(hospId + '|' + iso + '|' + time) % 100 < 38; // ~38% of slots taken
+  }
+  function renderSlots() {
+    var h = hospitalById(booking.hospital);
+    $('#time-hint').textContent = h ? h.name + ' · ' + prettyDate(booking.date) : '';
+    var free = 0;
+    $('#time-slots').innerHTML = TIME_SLOTS.map(function (t) {
+      var taken = slotTaken(booking.hospital, booking.date, t);
+      if (!taken) free++;
+      return '<button type="button" class="slot" data-time="' + t + '" ' + (taken ? 'disabled' : '') + ' aria-pressed="' + (booking.time === t) + '">' +
+        '<span class="t">' + t + '</span><small>' + (taken ? 'Unavailable' : 'Available') + '</small></button>';
+    }).join('');
+    if (booking.time && slotTaken(booking.hospital, booking.date, booking.time)) booking.time = null;
+    if (free === 0) $('#time-hint').textContent += ' — no free slots on this day. Please go back and pick another date.';
+  }
+  $('#time-slots').addEventListener('click', function (e) {
+    var b = e.target.closest('.slot'); if (!b || b.disabled) return;
+    booking.time = b.getAttribute('data-time');
+    $$('#time-slots .slot').forEach(function (s) { s.setAttribute('aria-pressed', s === b ? 'true' : 'false'); });
+    hideError();
+  });
+
+  /* Patient form validation */
+  var fName = $('#p-name'), fPhone = $('#p-phone'), fEmail = $('#p-email');
+  function setFieldError(input, msg) {
+    var field = input.closest('.field');
+    var out = $('#err-' + input.id.replace('p-', ''));
+    field.classList.toggle('invalid', !!msg);
+    input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    out.innerHTML = msg ? icon('i-alert') + '<span>' + esc(msg) + '</span>' : '';
+    return !msg;
+  }
+  function validateName() {
+    var v = fName.value.trim().replace(/\s+/g, ' ');
+    if (!v) return setFieldError(fName, 'Please enter your full name.');
+    if (v.length < 3 || v.split(' ').length < 2) return setFieldError(fName, 'Please enter your first and last name.');
+    if (/[0-9<>@#$%^*=+{}\[\]\\\/|]/.test(v)) return setFieldError(fName, 'Names should only contain letters.');
+    return setFieldError(fName, '');
+  }
+  function validatePhone() {
+    var raw = fPhone.value.trim();
+    if (!raw) return setFieldError(fPhone, 'Please enter your phone number.');
+    var v = raw.replace(/[\s\-()]/g, '');
+    // Egyptian mobile: 01[0125]xxxxxxxx, optionally +20 / 0020 prefix without leading 0
+    var mobile = /^(?:\+20|0020|0)?1[0125][0-9]{8}$/.test(v);
+    // Landline (Cairo 02 / Giza etc.): 0 + 1-2 digit area code + 7-8 digits
+    var landline = /^0(?:2|3|40|45|47|48|50|55|57|62|64|65|66|68|69|82|84|86|88|92|93|95|96|97)[0-9]{7,8}$/.test(v);
+    if (!mobile && !landline) return setFieldError(fPhone, 'Enter a valid Egyptian number, for example 0100 123 4567.');
+    return setFieldError(fPhone, '');
+  }
+  function validateEmail() {
+    var v = fEmail.value.trim();
+    if (!v) return setFieldError(fEmail, '');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return setFieldError(fEmail, 'Please enter a valid email, like name@example.com.');
+    return setFieldError(fEmail, '');
+  }
+  fName.addEventListener('blur', validateName);
+  fPhone.addEventListener('blur', validatePhone);
+  fEmail.addEventListener('blur', validateEmail);
+  [fName, fPhone, fEmail].forEach(function (el) {
+    el.addEventListener('input', function () { if (el.closest('.field').classList.contains('invalid')) { ({ 'p-name': validateName, 'p-phone': validatePhone, 'p-email': validateEmail })[el.id](); } });
+  });
+
+  /* Summary */
+  function summaryHTML(ref) {
+    var h = hospitalById(booking.hospital);
+    var rows = [
+      ['i-hospital', 'Hospital', h.name],
+      ['i-stethoscope', 'Specialty', SPEC_NAME[booking.specialty]],
+      ['i-calendar', 'Date', prettyDate(booking.date)],
+      ['i-clock', 'Time', booking.time],
+      ['i-user', 'Patient', booking.name]
+    ];
+    if (booking.phone) rows.push(['i-phone', 'Phone', booking.phone]);
+    return rows.map(function (r) {
+      return '<div><dt>' + icon(r[0]) + r[1] + '</dt><dd>' + esc(r[2]) + '</dd></div>';
+    }).join('');
+  }
+  function renderSummary() {
+    $('#summary').innerHTML = summaryHTML();
+    var ref = $('#summary-ref');
+  }
+
+  function makeRef() {
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', out = 'SC-';
+    var arr = new Uint32Array(6);
+    (window.crypto || window.msCrypto).getRandomValues(arr);
+    for (var i = 0; i < 6; i++) out += chars[arr[i] % chars.length];
+    return out;
+  }
+
+  /* Step engine */
+  function hideError() { elStepError.classList.remove('show'); elStepError.textContent = ''; }
+  function showError(msg) {
+    elStepError.textContent = msg;
+    elStepError.classList.remove('show'); void elStepError.offsetWidth; // restart animation
+    elStepError.classList.add('show');
+  }
+
+  function showStep(n) {
+    booking.step = n;
+    hideError();
+    if (n === 2) renderSpecialtyChoices();
+    if (n === 3) renderCalendar();
+    if (n === 4) renderSlots();
+    if (n === 6) renderSummary();
+
+    elPanels.forEach(function (p) { p.hidden = +p.getAttribute('data-panel') !== n; });
+    elStepper.forEach(function (li) {
+      var s = +li.getAttribute('data-step');
+      li.classList.toggle('done', s < n);
+      li.classList.toggle('current', s === n);
+      if (s === n) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
+    });
+    elBack.hidden = n === 1;
+    elNext.innerHTML = n === TOTAL
+      ? icon('i-check-circle') + ' Confirm Appointment'
+      : 'Continue ' + icon('i-arrow-right');
+    var heading = $('.panel[data-panel="' + n + '"] h3');
+    if (heading && n !== 1) heading.focus({ preventScroll: true });
+  }
+
+  function validateStep(n) {
+    if (n === 1 && !booking.hospital) { showError('Please choose a hospital to continue.'); return false; }
+    if (n === 2 && !booking.specialty) { showError('Please choose a medical specialty to continue.'); return false; }
+    if (n === 3 && !booking.date) { showError('Please pick a date from the calendar.'); return false; }
+    if (n === 4 && !booking.time) { showError('Please choose one of the available times.'); return false; }
+    if (n === 5) {
+      var a = validateName(), b = validatePhone(), c = validateEmail();
+      if (!(a && b && c)) {
+        showError('Please fix the highlighted fields.');
+        var bad = $('#patient-form .invalid input'); if (bad) bad.focus();
+        return false;
+      }
+      booking.name = fName.value.trim().replace(/\s+/g, ' ');
+      booking.phone = fPhone.value.trim();
+      booking.email = fEmail.value.trim();
+    }
+    return true;
+  }
+
+  elNext.addEventListener('click', function () {
+    if (!validateStep(booking.step)) return;
+    if (booking.step < TOTAL) { showStep(booking.step + 1); scrollWizard(); }
+    else confirmBooking();
+  });
+  elBack.addEventListener('click', function () { if (booking.step > 1) { showStep(booking.step - 1); scrollWizard(); } });
+
+  function scrollWizard() {
+    var w = $('#wizard'); var top = w.getBoundingClientRect().top;
+    if (top < 90) window.scrollTo({ top: window.pageYOffset + top - 110, behavior: 'smooth' });
+  }
+
+  function confirmBooking() {
+    var ref = makeRef();
+    var record = {
+      ref: ref, hospital: hospitalById(booking.hospital).name, specialty: SPEC_NAME[booking.specialty],
+      date: booking.date, time: booking.time, patient: booking.name, demo: true, createdAt: new Date().toISOString()
+    };
+    // Demo storage in this browser only (no phone/email stored)
+    var all = safeStore('get', 'shifacare-demo-bookings') || [];
+    all.push(record);
+    safeStore('set', 'shifacare-demo-bookings', all.slice(-20));
+
+    $('#ticket-ref').textContent = ref;
+    $('#ticket-details').innerHTML = summaryHTML();
+    $('#wizard').hidden = true;
+    var ok = $('#booking-success');
+    ok.hidden = false;
+    // restart check animation
+    var chk = $('.success-check', ok); chk.innerHTML = chk.innerHTML;
+    ok.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    $('h3', ok).focus({ preventScroll: true });
+  }
+
+  function resetBooking(keepView) {
+    booking = { step: 1, hospital: null, specialty: null, date: null, time: null, name: '', phone: '', email: '' };
+    calView = null;
+    [fName, fPhone, fEmail].forEach(function (el) { el.value = ''; setFieldError(el, ''); });
+    $('#wizard').hidden = false;
+    $('#booking-success').hidden = true;
+    renderHospitalChoices();
+    showStep(1);
+  }
+  $('#btn-again').addEventListener('click', function () {
+    resetBooking(); document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+  });
+  $('#btn-print').addEventListener('click', function () { window.print(); });
+
+  /* ---------------------------------------------------------
+     MEDICINE CATALOG + INSTALLMENT CALCULATOR
+     --------------------------------------------------------- */
+  var elMedGrid = $('#med-grid');
+  var elMedSelect = $('#med-select');
+  var medState = { med: MEDICINES[0].id, parts: 3 };
+
+  function renderMedCards() {
+    elMedGrid.innerHTML = MEDICINES.map(function (m) {
+      return '<article class="card med-card reveal in">' +
+        '<div class="med-top"><span class="icon-badge">' + icon(m.icon) + '</span><h3>' + esc(m.name) + '</h3></div>' +
+        '<p class="med-pack">' + icon('i-bottle') + ' ' + esc(m.pack) + '</p>' +
+        '<p class="med-price">' + egp(m.price) + ' <small>full price (demo)</small></p>' +
+        '<ul class="plan-chips" aria-label="Payment plans">' + m.plans.map(function (n) { return '<li>' + n + ' parts</li>'; }).join('') + '</ul>' +
+        (m.rx ? '<span class="rx-tag">' + icon('i-shield') + ' Prescription required</span>' : '') +
+        '<button type="button" class="btn btn-secondary" data-med="' + m.id + '">' + icon('i-coins') + ' View Payment Options</button>' +
+        '</article>';
+    }).join('');
+    elMedSelect.innerHTML = MEDICINES.map(function (m) { return '<option value="' + m.id + '">' + esc(m.name) + ' — ' + egp(m.price) + '</option>'; }).join('');
+    elMedSelect.value = medState.med;
+  }
+
+  elMedGrid.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-med]'); if (!b) return;
+    medState.med = b.getAttribute('data-med');
+    var m = medById(medState.med);
+    if (m.plans.indexOf(medState.parts) === -1) medState.parts = m.plans[m.plans.length - 1];
+    elMedSelect.value = medState.med;
+    $('#plan-confirm').hidden = true;
+    renderCalculator();
+    document.getElementById('calculator').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  elMedSelect.addEventListener('change', function () {
+    medState.med = elMedSelect.value;
+    var m = medById(medState.med);
+    if (m.plans.indexOf(medState.parts) === -1) medState.parts = m.plans[m.plans.length - 1];
+    $('#plan-confirm').hidden = true;
+    renderCalculator();
+  });
+
+  function renderCalculator() {
+    var m = medById(medState.med);
+    $('#med-price').textContent = egp(m.price);
+    $('#med-pack').textContent = m.pack;
+    $('#med-rx').hidden = !m.rx;
+
+    var letters = { 2: 'A', 3: 'B', 4: 'C' };
+    $('#plan-options').innerHTML = [2, 3, 4].map(function (n) {
+      var avail = m.plans.indexOf(n) !== -1;
+      var parts = splitPayments(m.price, n);
+      var each = parts[0] === parts[parts.length - 1] ? money(parts[0]) + ' each' : money(parts[0]) + ' + ' + money(parts[parts.length - 1]);
+      return '<div><input class="sr-only" type="radio" name="plan" id="plan-' + n + '" value="' + n + '" ' +
+        (medState.parts === n ? 'checked ' : '') + (avail ? '' : 'disabled ') + '>' +
+        '<label class="plan-card" for="plan-' + n + '"><span class="plan-letter">' + letters[n] + '</span>' +
+        '<span class="plan-name">Pay in ' + n + ' Parts</span>' +
+        '<span class="plan-each">' + (avail ? each : 'Not available for this medicine') + '</span></label></div>';
+    }).join('');
+
+    renderSchedule();
+  }
+
+  $('#plan-options').addEventListener('change', function (e) {
+    if (e.target.name === 'plan') {
+      medState.parts = +e.target.value;
+      $('#plan-confirm').hidden = true;
+      renderSchedule();
+    }
+  });
+
+  function scheduleParts() {
+    var m = medById(medState.med);
+    return splitPayments(m.price, medState.parts);
+  }
+
+  function renderSchedule() {
+    var m = medById(medState.med), parts = scheduleParts();
+    var today = new Date();
+    $('#schedule').innerHTML = parts.map(function (amt, i) {
+      var d = new Date(today.getFullYear(), today.getMonth() + i, today.getDate());
+      var when = i === 0 ? 'Today (at pick-up)' : 'Around ' + d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long' });
+      return '<li><span>' + ordinal(i) + ' payment<span class="when">' + when + '</span></span><span class="amt">' + money(amt) + '</span></li>';
+    }).join('');
+
+    // Sum in piastres to prove the installments add up exactly
+    var sumCents = parts.reduce(function (s, p) { return s + Math.round(p * 100); }, 0);
+    var exact = sumCents === Math.round(m.price * 100);
+    $('#schedule-total').innerHTML = '<span>Total</span><span>' + money(sumCents / 100) + '</span>' +
+      '<small>' + icon(exact ? 'i-check-circle' : 'i-alert') + (exact ? 'Adds up exactly to the full price · 0% interest · no fees' : 'Check amounts') + '</small>';
+  }
+
+  $('#med-choose').addEventListener('click', function () {
+    var m = medById(medState.med), parts = scheduleParts();
+    var rows = [
+      ['i-pill', 'Medicine', m.name],
+      ['i-wallet', 'Full price', egp(m.price)],
+      ['i-coins', 'Plan', 'Pay in ' + medState.parts + ' parts']
+    ];
+    parts.forEach(function (p, i) { rows.push(['i-calendar', ordinal(i) + ' payment', money(p)]); });
+    rows.push(['i-check-circle', 'Interest & fees', 'EGP 0 (demo assumption)']);
+    if (m.rx) rows.push(['i-shield', 'Reminder', 'Prescription required']);
+    $('#plan-confirm-body').innerHTML = rows.map(function (r) {
+      return '<div><dt>' + icon(r[0]) + r[1] + '</dt><dd>' + esc(r[2]) + '</dd></div>';
+    }).join('') +
+      '<div><dt>' + icon('i-info') + 'Note</dt><dd>Demo only. A real plan needs a participating pharmacy and a secure payment provider.</dd></div>';
+    var box = $('#plan-confirm');
+    box.hidden = false;
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    box.focus({ preventScroll: true });
+  });
+  $('#plan-change').addEventListener('click', function () {
+    $('#plan-confirm').hidden = true;
+    document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  /* ---------------------------------------------------------
+     INIT
+     --------------------------------------------------------- */
+  var statEl = $('[data-count="hospitals"]');
+  if (statEl) statEl.textContent = HOSPITALS.length;
+
+  renderHospitals();
+  renderCrowd();
+  renderHospitalChoices();
+  showStep(1);
+  renderMedCards();
+  renderCalculator();
+
+  // Expose a tiny test hook (used for automated checks only)
+  window.__shifacare = { splitPayments: splitPayments, level: level, slotTaken: slotTaken };
+})();
+
+</script>
+</body>
+</html>
